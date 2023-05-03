@@ -1,0 +1,56 @@
+.p-container {
+    position: sticky;
+    top: 1.75rem;
+    /* flex: 1; */
+    width: 100%;
+}
+
+.p-wrapper {
+    display: flex;
+    /* width: 32%; */
+    width: 70%;
+    flex-direction: column;
+    flex-shrink: 0;
+    margin: 1.75rem 0px 1.75rem 1.25rem;
+
+}
+
+.p-heading {
+    display: block;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: rgb(22, 28, 38);
+}
+
+.p-component {
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+    margin-top: 0.75rem;
+    padding: 1rem;
+}
+
+.p-comp-style {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white-lightest);
+    border: 1px solid var(--color-white-darkest);
+    box-shadow: var(--shadow-regular);
+    border-radius: var(--radii-lg);
+    background-color: white;
+    /* border: 1px solid black; */
+    padding: 1rem 1.5rem;
+}
+
+.p-pricetext {
+    line-height: 1.5;
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    color: rgb(27, 185, 52);
+    font-weight: var(--typography-bold-font-weight,500);
+    display: inline;
+}
