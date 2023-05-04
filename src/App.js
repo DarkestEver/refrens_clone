@@ -1,17 +1,24 @@
 import './App.css';
 
+import { Col, Row } from "antd";
+
 import CreateService from "./components/CreateService";
 import Preview from './components/Preview';
 
 function App() {
   return (
     <>
-    <div style={{display:"flex",justifyContent:"space-evenly",alignItems:"flex-start", margin:"1rem 5rem"}}>
 
-      <CreateService />
-      <Preview />
+    <Row gutter={[48]}>
+      <Col flex={3} style={{ maxWidth: "60%"}}>
+        <CreateService />
+      </Col>
+      <Col flex={2}>
+        <Preview />
+      </Col>
+    </Row>
 
-    </div>
+
     </>
   );
 }

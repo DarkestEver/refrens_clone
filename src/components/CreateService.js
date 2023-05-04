@@ -1,15 +1,25 @@
 import "./CreateService.css";
 
-import  { Input, Switch } from "antd";
+import  { Input, InputNumber, Switch } from "antd";
+import React, {useState} from "react";
 
-import React from "react";
-import Tags from "./Tags";
+import Currency from "./Currency";
+import PlanType from "./PlanType";
+import SelectServices from "./SelectServices";
 
 const CreateService = () => {
+    const [serviceText, setServiceText ] = useState("");
+    const [isPricing , setIsPricing ] = useState();
+    const [ isPriceRange, setIsPriceRange ] = useState();
     
-const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
-  };
+    const onChange = (checked) => {
+        console.log(`switch to ${checked}`);
+        setIsPricing(!checked);
+    };
+    const handlePriceRange = (checked) => {
+        console.log(`Price range switch to ${checked}`);
+        setIsPriceRange(checked);
+    };
 
   return <>
     <div class="cs-container">
@@ -27,7 +37,7 @@ const onChange = (checked) => {
                         <span class="required">*</span>
                         <span class="undertext">An easy to read, short name is better</span>
                         <div>
-                        <Input label="Name of Service" placeholder="E.g. Mobile App Development" name="name" class="" />
+                        <Input onChange={(e) => setServiceText(e.target.value)} label="Name of Service" placeholder="E.g. Mobile App Development" name="name" class="" autoComplete="off" />
                         </div>
                     </div>
                 </div>
@@ -51,7 +61,7 @@ const onChange = (checked) => {
                         <span class="required">*</span>
                         <span class="undertext">Enter 5 categories that define the domain of your service.</span>
                         <div>
-                         <Tags />
+                         <SelectServices />
                         </div>
                     </div>
                 </div>
@@ -66,10 +76,86 @@ const onChange = (checked) => {
 
                 <div class="box1">
                     <div class="cs-detials">
-                        <div class="label" style={{paddingRight:"10px"}}>Contact For Pricing</div>
-                        <Switch defaultChecked onChange={onChange} style={{background:"rgb(115, 61, 217)"}} />
+                        <div class="label">Contact For Pricing</div>
+                        <Switch defaultChecked onChange={onChange} style={{marginLeft:"10px"}} />
                         <span class="undertext">All your price plans will not be shown publically. Disable this to add price plans</span>
                     </div>
+
+                    {isPricing && 
+                        <div>
+                            
+                            <div class="box2">
+                                <div class="cs-detials">
+                                    <div class="cs-mb">
+                                        <label class="label ">Currency</label>
+                                    </div>
+                                        <Currency />                                       
+                                </div>
+                            </div>
+
+                            <div class="box2">
+                                <div class="cs-details">
+                                    <div class="cs-mb">
+                                        <label class="label">Enable Price Range</label>
+                                        <Switch onChange={handlePriceRange} style={{marginLeft:"10px"}}/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="box2">
+                                <div class="cs-detials">
+                                    <div class="cs-mb">
+                                        <label class="label ">Pre-discount Price</label>
+                                    </div>
+                                    <InputNumber style={{width:"80%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Pre-discount price:", value)} />                                    
+                                </div>
+                            </div>
+
+                            
+                            {isPriceRange ?
+                                <div class="box2">
+                                <div class="cs-price-range">
+
+                                    <div class="wrap">
+                                        <div class="cs-mb">
+                                            <label class="label ">Min Amount</label>
+                                        </div>
+                                        <InputNumber style={{width:"100%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />      
+                                    </div>
+
+                                    <div class="wrap">
+                                        <div class="cs-mb">
+                                            <label class="label ">Max Amount</label>
+                                        </div>
+                                        <InputNumber style={{width:"100%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />    
+                                    </div>    
+
+                                </div>
+                                </div>
+                                
+                                :
+
+                                <div class="box2">
+                                <div class="cs-detials">
+                                    <div class="cs-mb">
+                                        <label class="label ">Amount</label>
+                                    </div>
+                                    <InputNumber style={{width:"80%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />                                    
+                                </div>
+                                </div>
+                            }
+                            
+                            <div class="box2">
+                                <div class="cs-detials">
+                                    <div class="cs-mb">
+                                        <label class="label ">Plan Types</label>
+                                    </div>
+                                        <PlanType />                                       
+                                </div>
+                            </div>
+                            
+                        </div>
+                    }
                 </div>
 
                 <div class="button">
