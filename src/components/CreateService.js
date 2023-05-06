@@ -1,16 +1,24 @@
 import "./CreateService.css";
 
-import  { Input, InputNumber, Switch } from "antd";
+import  { Col, Input, InputNumber, Row, Switch } from "antd";
 import React, {useState} from "react";
 
 import Currency from "./Currency";
 import PlanType from "./PlanType";
+import { PlusSquareOutlined } from "@ant-design/icons";
+import Preview from './Preview';
 import SelectServices from "./SelectServices";
 
 const CreateService = () => {
     const [serviceText, setServiceText ] = useState("");
+    const [para, setPara ] = useState("");
     const [isPricing , setIsPricing ] = useState();
     const [ isPriceRange, setIsPriceRange ] = useState();
+    const [ isDiscountPrice, setIsDiscountPrice ] = useState(false);
+    const [ amount, setAmount ] = useState();
+    const [ planType, setPlanType ] = useState();
+    const [ minAmount , setMinAmount ] = useState();
+    const [ maxAmount , setMaxAmount ] = useState();
     
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
@@ -21,7 +29,17 @@ const CreateService = () => {
         setIsPriceRange(checked);
     };
 
+    const handlePlanType = (value) => {
+        console.log(`Parent ${value}`)
+        setPlanType(value);
+    }
   return <>
+  
+  <Row gutter={[48]}>
+      <Col flex={3} style={{ 
+          maxWidth: '60%', 
+          width: '100%' 
+          }} >
     <div class="cs-container">
         <div class="cs-wrapper">
             <div>
@@ -37,7 +55,7 @@ const CreateService = () => {
                         <span class="required">*</span>
                         <span class="undertext">An easy to read, short name is better</span>
                         <div>
-                        <Input onChange={(e) => setServiceText(e.target.value)} label="Name of Service" placeholder="E.g. Mobile App Development" name="name" class="" autoComplete="off" />
+                        <Input onChange={(e) => setServiceText(e.target.value)} label="Name of Service" placeholder="E.g. Mobile App Development" name="name" value={serviceText} autoComplete="off" />
                         </div>
                     </div>
                 </div>
@@ -49,7 +67,7 @@ const CreateService = () => {
                         <span class="required">*</span>
                         <span class="undertext">Help your potential clients understand what your Product or Service is about.</span>
                         <div>
-                        <Input label="Name of Service" placeholder="E.g. Mobile App Development" name="name" class="" />
+                        <Input onChange={(e) => setPara(e.target.value)} label="Name of Service" placeholder="Write something about your product/services" name="name" value={para} />
                         </div>
                     </div>
                 </div>
@@ -99,15 +117,23 @@ const CreateService = () => {
                                         <label class="label">Enable Price Range</label>
                                         <Switch onChange={handlePriceRange} style={{marginLeft:"10px"}}/>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="box2">
-                                <div class="cs-detials">
-                                    <div class="cs-mb">
-                                        <label class="label ">Pre-discount Price</label>
-                                    </div>
-                                    <InputNumber style={{width:"80%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Pre-discount price:", value)} />                                    
+                                    { isDiscountPrice ?
+                                        <div>
+                                            <div class="cs-detials">
+                                                <div class="cs-mb">
+                                                    <label class="label ">Pre-discount Price</label>
+                                                </div>
+                                                <InputNumber style={{width:"80%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Pre-discount price:", value)} />                                    
+                                            </div>
+                                        </div>
+                                        :
+                                        <button class="cs-discount-btn" onClick={() => setIsDiscountPrice(true)}> 
+                                            <PlusSquareOutlined style={{ color:"rgb(115, 61, 217)" , paddingRight: "5px"}} />
+                                            Add pre-discounted price also
+                                        </button>
+                                    }
+                                    
                                 </div>
                             </div>
 
@@ -120,14 +146,14 @@ const CreateService = () => {
                                         <div class="cs-mb">
                                             <label class="label ">Min Amount</label>
                                         </div>
-                                        <InputNumber style={{width:"100%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />      
+                                        <InputNumber style={{width:"100%"}} min={0} max={1000000} defaultValue={0} onChange={(value) => setMinAmount(value)} />      
                                     </div>
 
                                     <div class="wrap">
                                         <div class="cs-mb">
                                             <label class="label ">Max Amount</label>
                                         </div>
-                                        <InputNumber style={{width:"100%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />    
+                                        <InputNumber style={{width:"100%"}} min={0} max={1000000} defaultValue={0} onChange={(value) => setMaxAmount(value)} />    
                                     </div>    
 
                                 </div>
@@ -140,7 +166,7 @@ const CreateService = () => {
                                     <div class="cs-mb">
                                         <label class="label ">Amount</label>
                                     </div>
-                                    <InputNumber style={{width:"80%"}} min={1} max={1000000} defaultValue={0} onChange={(value) => console.log("Amount:", value)} />                                    
+                                    <InputNumber style={{width:"80%"}} min={0} max={1000000} defaultValue={0} onChange={(value) => setAmount(value)} />                                    
                                 </div>
                                 </div>
                             }
@@ -150,7 +176,7 @@ const CreateService = () => {
                                     <div class="cs-mb">
                                         <label class="label ">Plan Types</label>
                                     </div>
-                                        <PlanType />                                       
+                                        <PlanType handlePlanType={handlePlanType} />                                       
                                 </div>
                             </div>
                             
@@ -166,6 +192,21 @@ const CreateService = () => {
             </div>
         </div>
     </div>
+    </Col>
+
+    <Col flex={2}>
+        <Preview 
+            serviceText={serviceText} 
+            para={para}
+            amount={amount}
+            isPriceRange={isPriceRange}
+            minAmount={minAmount}
+            maxAmount={maxAmount}
+            planType={planType}
+            isPricing={isPricing}
+        />
+      </Col>
+    </Row>
   </>;
 };
 

@@ -1,15 +1,16 @@
 import { Select } from 'antd';
 import {planTypeOptions} from "../data";
 
-const handleChange = (value) => {
-  console.log(`Selected: ${value}`);
-};
-const PlanType = () => {
+const PlanType = ({handlePlanType}) => {
+  
+  const handleChange = (value) => {
+    handlePlanType(value);
+  };
   
   return (
     <>
         <Select
-          defaultValue="Per Project"
+          placeholder="Select a plan type"
           onChange={handleChange}
           style={{
             width: "80%",

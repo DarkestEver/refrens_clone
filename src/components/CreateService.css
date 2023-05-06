@@ -107,6 +107,13 @@
     appearance: none !important;
 }
 
+.cs-discount-btn {
+    all: unset;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
 .cs-mb {
     margin-bottom: 0.5rem;
 }
@@ -127,4 +134,3 @@
     justify-content: center;
     align-items: flex-start;
 }
-
