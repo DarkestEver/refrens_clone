@@ -1,0 +1,79 @@
+.p-container {
+    position: sticky;
+    top: 1.75rem;
+    width: auto;
+}
+
+.p-wrapper {
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.p-header {
+    display: block;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: rgb(22, 28, 38);
+}
+
+.p-component {
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+    margin-top: 0.75rem;
+    padding: 1rem;
+}
+
+.p-comp-style {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    background-clip: border-box;
+    border: 1px solid #C6D2D9;
+    border-bottom: 1px solid #C6D2D9 !important;
+    padding: 1rem 1.5rem;
+}
+
+.p-pricetext {
+    line-height: 1.5;
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    color: rgb(27, 185, 52);
+    font-weight: var(--typography-bold-font-weight,500);
+    display: inline;
+}
+
+.p-heading {
+    display: block;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: rgb(22, 28, 38);
+    font-weight: var(--typography-bold-font-weight,500);
+}
+
+.p-paragraph {
+    white-space: pre-line;
+    margin-top: var(--sizes-small);
+    overflow-wrap: break-word;
+    font-size: var(--sizes-p);
+    line-height: 1.5em;
+    overflow: hidden;
+    max-height: 6em;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+}
+
+.p-plantype {
+    margin: 1rem 0 0;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+

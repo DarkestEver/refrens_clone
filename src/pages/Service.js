@@ -1,9 +1,14 @@
+import React , {useState} from "react";
+
 import CreateService from "../components/CreateService";
 
 function Service() {
+    const [service ,addService] = useState();  
+    console.log(service);
+  
   return (
     <>
-      <CreateService />
+      <CreateService addService={addService}/>
     </>
   );
 }

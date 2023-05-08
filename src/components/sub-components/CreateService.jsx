@@ -3,13 +3,15 @@ import "./CreateService.css";
 import  { Col, Input, InputNumber, Row, Switch } from "antd";
 import React, {useState} from "react";
 
-import Currency from "./Currency";
+import Currency from "./Currency.jsx";
 import PlanType from "./PlanType";
 import { PlusSquareOutlined } from "@ant-design/icons";
-import Preview from './Preview';
+import Preview from '../Preview';
 import SelectServices from "./SelectServices";
 
-const CreateService = () => {
+const CreateService = ({addService}) => {
+  const [ services , setServices ] = useState([]);
+
     const [serviceText, setServiceText ] = useState("");
     const [para, setPara ] = useState("");
     const [isPricing , setIsPricing ] = useState();
@@ -33,6 +35,39 @@ const CreateService = () => {
         console.log(`Parent ${value}`)
         setPlanType(value);
     }
+
+    const saveServiceComp = () => {
+        const service = {
+          name: serviceText,
+          description: para,
+          pricing: {
+            isContactForPricing: isPricing,
+            currency: "",
+            isPriceRange: isPriceRange,
+            isDiscountedPrice: isDiscountPrice,
+            amount: amount,
+            planType: planType,
+            minAmount: minAmount,
+            maxAmount: maxAmount,
+          },
+        };
+        setServices([...services, service]);
+        console.log("CreateServices page", services);
+        addService(services);
+    
+        setServiceText("");
+        setPara("");
+        setIsPricing(false);
+        setIsPriceRange(false);
+        setIsDiscountPrice(false);
+        setAmount(undefined);
+        setPlanType(undefined);
+        setMinAmount(undefined);
+        setMaxAmount(undefined);
+      
+      };
+      
+    
   return <>
   
   <Row gutter={[48]}>
@@ -185,7 +220,7 @@ const CreateService = () => {
                 </div>
 
                 <div class="button">
-                    <button type="submit" class="cs-btn">Add a Service</button>
+                    <button type="submit" class="cs-btn" onClick={saveServiceComp} >Add a Service</button>
                 </div>
 
 
@@ -207,6 +242,7 @@ const CreateService = () => {
         />
       </Col>
     </Row>
+
   </>;
 };
 

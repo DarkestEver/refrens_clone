@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import {planTypeOptions} from "../data";
+import {planTypeOptions} from "../../data";
 
 const PlanType = ({handlePlanType}) => {
   

@@ -5,6 +5,8 @@ import {Col, Row, Skeleton} from "antd";
 import React from "react";
 
 const Preview = ({serviceText, para , amount, isPriceRange, minAmount, maxAmount, planType, isPricing }) => {
+
+  
   return <>
     <div class="p-container">
         <div class="p-wrapper">

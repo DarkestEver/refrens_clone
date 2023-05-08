@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import {selectOptions} from "../data";
+import {selectOptions} from "../../data";
 
 const handleChange = (value) => {
   console.log(`selected ${value}`);
