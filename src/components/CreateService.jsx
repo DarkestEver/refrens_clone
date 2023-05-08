@@ -8,9 +8,11 @@ import PlanType from "../components/sub-components/PlanType";
 import { PlusSquareOutlined } from "@ant-design/icons";
 import Preview from '../components/Preview';
 import SelectServices from "../components/sub-components/SelectServices";
+import { useNavigate } from "react-router-dom";
 
-const CreateService = ({addService}) => {
-  const [ services , setServices ] = useState([]);
+const CreateService = ({setpropServices}) => {
+    const navigate = useNavigate();
+    const [ services , setServices ] = useState([]);
 
     const [serviceText, setServiceText ] = useState("");
     const [para, setPara ] = useState("");
@@ -53,21 +55,21 @@ const CreateService = ({addService}) => {
         };
         setServices([...services, service]);
         console.log("CreateServices page", services);
-        addService(services);
+        setpropServices(services);
     
         setServiceText("");
         setPara("");
         setIsPricing(false);
-        setIsPriceRange(false);
+        setIsPriceRange();
         setIsDiscountPrice(false);
-        setAmount(undefined);
-        setPlanType(undefined);
-        setMinAmount(undefined);
-        setMaxAmount(undefined);
-      
+        setAmount();
+        setPlanType();
+        setMinAmount();
+        setMaxAmount();
+        
+        // navigate('/');
       };
       
-    
   return <>
   
   <Row gutter={[48]}>
@@ -239,6 +241,7 @@ const CreateService = ({addService}) => {
             maxAmount={maxAmount}
             planType={planType}
             isPricing={isPricing}
+        
         />
       </Col>
     </Row>

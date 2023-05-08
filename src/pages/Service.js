@@ -1,16 +1,14 @@
-import React , {useState} from "react";
+// import React , {useState} from "react";
 
-import CreateService from "../components/CreateService";
+// import CreateService from "../components/CreateService";
 
-function Service() {
-    const [service ,addService] = useState();  
-    console.log(service);
+// function Service() {
   
-  return (
-    <>
-      <CreateService addService={addService}/>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <CreateService />
+//     </>
+//   );
+// }
 
-export default Service;
+// export default Service;

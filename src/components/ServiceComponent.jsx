@@ -1,18 +1,18 @@
 import { Col, Row } from "antd";
 
-export const ServiceComponent = ({services}) => {
+const ServiceComponent = ({services}) => {
   
     services?.map(service => console.log(service));
 
-    if (!services) {
-        return <div>Loading...</div>;
-    }  
+    // if (!services) {
+    //     return <div>Loading...</div>;
+    // }  
       
     return (
         <>
  {services?.map((service, index) => {
             return <>
-            <Col key={index}>
+            <Col span={8} key={index}>
                 <div class="p-container">
                     <div class="p-wrapper">
         
@@ -27,7 +27,7 @@ export const ServiceComponent = ({services}) => {
                                     </div>
                                  
                             </div>
-
+                            { service.pricing.isPricing ?
                                 <>
                                 <Row>
                                 { service.pricing.isPriceRange ? 
@@ -44,7 +44,13 @@ export const ServiceComponent = ({services}) => {
                                 </Col>
                                 </Row>
                                 </>
-                                
+                            :
+                            <div class="p-pricetext">
+                                Price Available on Request
+                            </div>
+                        
+                            }
+
                         </div>
 
                     </div>
@@ -55,3 +61,5 @@ export const ServiceComponent = ({services}) => {
         </>
     )
 }
+
+export default ServiceComponent;
