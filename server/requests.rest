@@ -1,0 +1,34 @@
+GET http://localhost:3001/service
+
+###############
+GET http://localhost:3001/service/645a197c2ef3c33ed1e150ab
+
+##########################
+
+PUT http://localhost:3001/editservice/645a3c15c49b776d36375114
+
+
+################
+
+POST http://localhost:3001/new/service
+Content-Type: application/json
+
+{
+    "service_name": "Pole Dancer",
+     "service_para": "Hii!! Please Hire me",
+     "service_tags": ["Creator", "Copywriter","Filming & Shooting"],
+     "isPricing": true,
+     "pricing": {
+       "service_currency": "Indian Rupees",
+       "service_amount": 100,
+       "service_plan_type": "Every Week",
+       "isPriceRange": true,
+       "min_amount": 50,
+       "max_amount": 100,
+       "isDiscountPrice": true,
+       "pre_discount_price": 199
+     }
+}
+
+#######################
+DELETE http://localhost:3001/service/645a23fb327f9ac994e5d9c0
