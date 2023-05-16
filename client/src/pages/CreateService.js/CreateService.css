@@ -10,6 +10,7 @@
     background-clip: border-box;
     border: 1px solid #C6D2D9;
     border-bottom: 1px solid #C6D2D9 !important;
+    margin-bottom: 2rem;
 }
 
 .cs-wrapper {

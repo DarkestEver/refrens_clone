@@ -13,6 +13,12 @@ const serviceSchema = new mongoose.Schema({
           return this.isPricing === true;
         }
       },
+      service_currency_symbol: {
+        type: String,
+        required: function () {
+          return this.isPricing === true;
+        }
+      },
       service_amount: {
         type: Number,
         required: false

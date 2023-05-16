@@ -1,13 +1,13 @@
 import { Select } from 'antd';
-import {currencyOptions} from "../../data";
+import {currencyOptions} from "../../../data";
 
-const Currency = ({ setCurrency, initialValue }) => {
+const Currency = ({ setCurrency, initialValue , setSymbol}) => {
   
-  const handleChange = (value) => {
+  const handleChange = (value,symbol) => {
     console.log(`Selected: ${value}`);
     setCurrency(value);
+    setSymbol(symbol.symbol);
   };
-
   return (
     <>
         <Select

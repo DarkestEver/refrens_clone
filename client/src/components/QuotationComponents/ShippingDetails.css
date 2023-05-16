@@ -1,0 +1,26 @@
+.qae-contain{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 100%;
+    box-shadow: none;
+    flex-shrink: 0;
+    padding: 1.75rem;
+    background-color: white;
+    background-color: #fefefe;
+    background-clip: border-box;
+    border: 1px solid #C6D2D9;
+    border-bottom: 1px solid #C6D2D9 !important;
+    margin-bottom: 2rem;
+}
+.qae-box2{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.qae-space {
+    padding-bottom: 15px;
+}

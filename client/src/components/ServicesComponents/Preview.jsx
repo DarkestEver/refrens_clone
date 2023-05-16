@@ -3,8 +3,9 @@ import "./Preview.css";
 import {Col, Row, Skeleton} from "antd";
 
 import React from "react";
+import parse from "html-react-parser";
 
-const Preview = ({serviceText, para , amount, isPriceRange, minAmount, maxAmount, planType, isPricing }) => {
+const Preview = ({serviceText, editorText , symbol, amount, isPriceRange, minAmount, maxAmount, planType, isPricing }) => {
   
   return <>
     <div class="p-container">
@@ -18,10 +19,10 @@ const Preview = ({serviceText, para , amount, isPriceRange, minAmount, maxAmount
                     <div class="p-heading">
                       {serviceText}
                     </div>
-                      { para
+                      { editorText
                         ?
                           <div class="p-paragraph">
-                          {para}
+                          {parse(editorText)}
                         </div>
                         :
                         <Skeleton />
@@ -34,11 +35,11 @@ const Preview = ({serviceText, para , amount, isPriceRange, minAmount, maxAmount
                     <Row>
                     { isPriceRange ? 
                       <Col className="p-pricetext">
-                      {minAmount} - {maxAmount}
+                       {symbol}{minAmount} - {symbol}{maxAmount}
                       </Col>
                       :
                       <Col className="p-pricetext">
-                      {amount}
+                       {symbol}{amount}
                       </Col>
                     }
                       <Col className="p-plantype">

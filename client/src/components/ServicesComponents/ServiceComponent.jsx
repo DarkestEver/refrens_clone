@@ -1,15 +1,19 @@
 import "./ServiceComponent.css";
 
 import { Col, Divider, Modal, Row } from "antd";
-import { DeleteOutlined, EditOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, PlusSquareOutlined } from "@ant-design/icons";
+import React , {useState} from "react";
 
+import LeadModal from "./LeadModal";
 import axios from "axios";
+import parse from "html-react-parser";
 import { useNavigate } from "react-router-dom";
 
 const { confirm } = Modal;
 
 const ServiceComponent = ({ services, setServices }) => {
   const navigate = useNavigate();
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
 
   const showDeleteConfirm = (serviceId) => {
      confirm({
@@ -54,11 +58,22 @@ const ServiceComponent = ({ services, setServices }) => {
       navigate("/edit-service", { state : {id: serviceId} } );
     }
 
+  
+    const showLeadModal = () => {
+      setIsLeadModalOpen(true);
+    };
+    const handleLeadOk = () => {
+      setIsLeadModalOpen(false);
+    };
+    const handleLeadCancel = () => {
+      setIsLeadModalOpen(false);
+    };
+
     return (
         <>
            {services?.map((service, index) => {
             return <>
-            <Col span={8} key={index} id={service._id} className="">
+            <Col xs={24} sm={24} md={8} lg={8} xl={8}  key={index} id={service._id}>
                 <div class="service-components">
                     <div class="p-wrapper">
 
@@ -69,7 +84,7 @@ const ServiceComponent = ({ services, setServices }) => {
                                 </div>
                 
                                     <div class="p-paragraph">
-                                    {service.service_para}
+                                    {parse(service.service_para)}
                                     </div>
                                  
                             </div>
@@ -78,11 +93,11 @@ const ServiceComponent = ({ services, setServices }) => {
                                 <Row>
                                 { service.pricing.isPriceRange ? 
                                 <Col className="p-pricetext">
-                                  ₹{service.pricing.min_amount} - ₹{service.pricing.max_amount}
+                                  {service.pricing.service_currency_symbol}{service.pricing.min_amount} - {service.pricing.service_currency_symbol}{service.pricing.max_amount}
                                 </Col>
                                 :
                                 <Col className="p-pricetext">
-                                  ₹{service.pricing.service_amount}
+                                  {service.pricing.service_currency_symbol}{service.pricing.service_amount}
                                 </Col>
                                 }
                                 <Col className="p-plantype">
@@ -106,6 +121,14 @@ const ServiceComponent = ({ services, setServices }) => {
                               <Col onClick={() => handleEdit(service._id)} style={{cursor:"pointer"}} >
                                 <EditOutlined /> Edit
                               </Col>
+                              <Divider type="vertical" />
+                                <Col onClick={showLeadModal} style={{cursor:"pointer"}}>
+                                  <PlusSquareOutlined /> Add a Lead
+                                </Col>
+                                  <Modal title="Add a Lead" open={isLeadModalOpen} onOk={handleLeadOk} onCancel={handleLeadCancel}>
+                                    <Divider />
+                                    <LeadModal />
+                                  </Modal>
                             </Row>
 
                         </div>

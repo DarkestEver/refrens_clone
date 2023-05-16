@@ -2,6 +2,7 @@
     position: sticky;
     top: 1.75rem;
     width: auto;
+    height: 100vh;
 }
 
 .p-wrapper {
