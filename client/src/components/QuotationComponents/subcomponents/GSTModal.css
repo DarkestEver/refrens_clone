@@ -1,0 +1,139 @@
+.gst-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.gst-label {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.gst-type {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.nf-box1 {
+    width: 100%;
+    display: flex;
+    padding: 1rem 2rem 1rem 10px;
+    background: rgb(247,250,255);
+    margin-bottom: 0.5rem;
+}
+
+.nf-box2-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.nf-box2 {
+    padding: 1rem 10px;
+    background: rgb(247,250,255);
+    margin-bottom: 0.5rem;
+}
+
+.nf-result {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background: rgb(115, 61, 217);
+    color: white;
+}
+
+.nf-top-desc {
+    color: rgb(196, 196, 196);
+    margin-bottom: 1rem;
+}    
+
+.n-notes {
+    color: rgb(90,106,123);
+    background: rgb(247,250,255);
+    padding: 1rem 1rem ;
+}
+
+.n-top-desc {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    font-size: 1rem;
+    align-items: center;
+}
+
+.s-box {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.s-sig-label {
+    display: flex;
+    justify-content: center;
+    border: 1px solid rgb(119, 119, 119);
+    border-radius: 5px;
+    padding: 8px 0;
+    cursor: pointer;
+}
+.s-sig-label:hover {
+    background: rgb(243,245,247);
+}
+
+.contact-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-box {
+    .ant-input {
+        background: rgb(247,250,255);
+        box-sizing: border-box;
+        padding: 4px 11px;
+        font-size: 14px;
+        line-height: 1.5714285714285714;
+        background-image: none;
+        border-width: none;
+        border-style: none;
+        border-bottom: 1px solid gray;
+        border-radius: none;
+        margin-right: 10px;
+    }
+}
+
+.ant-input-affix-wrapper {
+    background: rgb(247,250,255);
+    border: none;
+    border-radius: none;
+    border-bottom: 1px solid gray;
+    display:flex;
+    flex-direction: row;
+}
+
+.contact-dynamic-width{
+    width: fit-content;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.tac-input {
+    font-size: 1rem;
+    background: rgb(247,250,255);
+    padding: 4px 11px;
+    width: 90%;
+    border-bottom: 1px solid gray;
+    padding-bottom: 0.5rem;
+}
+
+.tac-new-btn {
+    display: flex;
+    justify-content: row;
+    padding: 1rem 0 0 1rem;
+    cursor: pointer;
+}

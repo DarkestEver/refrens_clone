@@ -219,15 +219,28 @@ input:focus, select:focus {
 .ant-table-tbody, .ant-table-cell {
     background-color: rgb(247,250,255);
 }
-.ant-table-cell-row-hover:hover {
+/* .ant-table-cell-row-hover:hover {
     background-color: rgb(247,250,255) !important;
-}
+} */
 
 .ant-form-item.css-dev-only-do-not-override-yp8pcc{
     margin: 0;
 }
 
+.table-container {
+    display: flex;
+    justify-content: space-around;
+}
 
+.ant-table-footer{
+    padding: 16px 16px;
+    color: rgba(0, 0, 0, 0.88);
+    background: green;
+}
+
+table {
+    background-color: rgb(247,250,255)
+}
 
 .qae-button {
     display: inline-flex;
