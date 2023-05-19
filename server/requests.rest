@@ -1,34 +1,110 @@
-GET http://localhost:3001/service
+# GET http://localhost:3001/service
 
-###############
-GET http://localhost:3001/service/645a197c2ef3c33ed1e150ab
+################################
+GET http://localhost:3001/quotation
 
-##########################
-
-PUT http://localhost:3001/editservice/645a3c15c49b776d36375114
-
-
-################
-
-POST http://localhost:3001/new/service
+######################
+POST http://localhost:3001/new/quotation
 Content-Type: application/json
 
 {
-    "service_name": "Pole Dancer",
-     "service_para": "Hii!! Please Hire me",
-     "service_tags": ["Creator", "Copywriter","Filming & Shooting"],
-     "isPricing": true,
-     "pricing": {
-       "service_currency": "Indian Rupees",
-       "service_amount": 100,
-       "service_plan_type": "Every Week",
-       "isPriceRange": true,
-       "min_amount": 50,
-       "max_amount": 100,
-       "isDiscountPrice": true,
-       "pre_discount_price": 199
-     }
+  "quotation_no": "A000001",
+  "quotation_date": "23/01/2023",
+  "business_details": {
+    "your_business": {
+      "name": "Accenture",
+      "address": "Delhi"
+    },
+    "client": {
+      "name": "Accenture",
+      "address": "Delhi"
+    }
+  },
+  "gst": {
+    "tax_type": "GST",
+    "gst_type": "IGST"
+  },
+  "currency": {
+    "short_form": "INR",
+    "symbol": "₹"
+  },
+  "number_format": {
+    "format": "lakhs",
+    "decimal_digits": "2"
+  },
+  "item_wise_discount": {
+    "discount_type": "%",
+    "discount_value": "10"
+  },
+  "hideTotals": {
+    "discount_on_total": {
+      "key": "Reduction",
+      "value": "2",
+      "discount_type": "%"
+    },
+    "additional_charges": {
+      "key": "Extra charges",
+      "value": "250",
+      "discount_type": "₹"
+    },
+    "total_in_words": "Five Thousand"
+  },
+  "terms_and_conditions": [{
+    "id": "1",
+    "value": "Applicable taxes will be extra."
+  }, {
+    "id": "2",
+    "value": "Work will resume after advance payment."
+  }],
+  "notes": "This is a note...",
+  "attachments": [{
+    "filename": "file.jpg",
+    "url": "https://unsplash.com"
+  }],
+  "signature": {
+    "signature": "lavesh.png",
+    "label": "Lave Bisht"
+  },
+  "additional_info": {
+    "key": "Good",
+    "value": "Yes"
+  },
+  "contact_info": {
+    "email": "lavesh@gmail.com",
+    "phone": "8588047983"
+  }
 }
 
-#######################
-DELETE http://localhost:3001/service/645a23fb327f9ac994e5d9c0
+
+# ###############
+# GET http://localhost:3001/service/645a197c2ef3c33ed1e150ab
+
+# ##########################
+
+# PUT http://localhost:3001/editservice/645a3c15c49b776d36375114
+
+
+# ################
+
+# POST http://localhost:3001/new/service
+# Content-Type: application/json
+
+# {
+#     "service_name": "Pole Dancer",
+#      "service_para": "Hii!! Please Hire me",
+#      "service_tags": ["Creator", "Copywriter","Filming & Shooting"],
+#      "isPricing": true,
+#      "pricing": {
+#        "service_currency": "Indian Rupees",
+#        "service_amount": 100,
+#        "service_plan_type": "Every Week",
+#        "isPriceRange": true,
+#        "min_amount": 50,
+#        "max_amount": 100,
+#        "isDiscountPrice": true,
+#        "pre_discount_price": 199
+#      }
+# }
+
+# #######################
+# DELETE http://localhost:3001/service/645a23fb327f9ac994e5d9c0

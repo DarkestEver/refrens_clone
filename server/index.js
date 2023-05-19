@@ -28,6 +28,30 @@ mongoose.connect( process.env.MONGODB_URL,
 
     
 const Service = require("./models/Service.js");
+const Quotation = require("./models/Quotation.js");
+
+app.get("/quotation", async (req,res) => {
+    try{
+        const quotation = await Quotation.find();
+        res.json(quotation);
+    }catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+
+
+app.post("/new/quotation", async (req,res) => {
+    const quotationData = req.body;
+    try {
+      const quotation = new Quotation(quotationData);
+      await quotation.save();
+      res.status(201).json(quotation);
+      
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+});
 
 app.get("/service", async (req,res) => {
     try {
@@ -37,6 +61,19 @@ app.get("/service", async (req,res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+app.post("/new/service", async (req,res) => {
+    const serviceData = req.body;
+    try {
+      const service = new Service(serviceData);
+      await service.save();
+      res.status(201).json(service);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error' });
+    }
+});
+
 
 app.get("/service/:id", async (req,res) => {
     try {
@@ -67,19 +104,6 @@ app.put('/editservice/:id', async (req, res) => {
     }
 });
   
-
-app.post("/new/service", async (req,res) => {
-    const serviceData = req.body;
-    try {
-      const service = new Service(serviceData);
-      await service.save();
-      res.status(201).json(service);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Server error' });
-    }
-});
-
 
 app.delete("/delete/service/:id", async (req,res) => {
     const { id } = req.params;

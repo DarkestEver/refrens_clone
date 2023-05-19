@@ -242,6 +242,19 @@ table {
     background-color: rgb(247,250,255)
 }
 
+.iwd-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+}
+.iwd-sub {
+    padding-left: 10px;
+    font-weight: 600;
+}
+
+
 .qae-button {
     display: inline-flex;
     outline: none;

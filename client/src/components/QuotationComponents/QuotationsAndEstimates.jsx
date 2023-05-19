@@ -1,25 +1,57 @@
 import "./QuotationsAndEstimates.css";
 
-import { Button, Checkbox, Col, Divider, Input, InputNumber, Modal, Row, Space } from 'antd';
+import { Button, Checkbox, Col, Divider, Input, Modal, Row, Space } from 'antd';
 import { CloseOutlined, DollarOutlined, EditOutlined, FieldNumberOutlined, MailOutlined, PaperClipOutlined, PercentageOutlined, PhoneOutlined, PlusSquareOutlined, TableOutlined, TagOutlined, UnorderedListOutlined } from "@ant-design/icons";
 
+import AddMoreFields from "./subcomponents/AddMoreFields";
+import AdditionalCharges from "./subcomponents/AdditionalCharges";
 import AdditionalInfo from "./subcomponents/AdditionalInfo";
+import BusinessDetails from "./subcomponents/BusinessDetails";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { DatePicker } from 'antd';
+import DiscountOnTotal from "./subcomponents/DiscountOnTotal";
 import GSTModal from "./subcomponents/GSTModal";
 import ItemTable from './ItemTable';
 import NumberFormat from "./subcomponents/NumberFormat";
 import QuotationCurrency from "./QuotationCurrency";
-import SelectBusiness from './SelectBusiness';
 import ShippingDetails from "./ShippingDetails";
 import SignatureUpload from "./subcomponents/SignatureUpload";
 import TermsAndCondition from "./subcomponents/TermsAndCondition";
+import TotalInWords from "./subcomponents/TotalInWords";
 import Upload from './subcomponents/Upload';
+import dayjs from 'dayjs';
 import parse from "html-react-parser";
+import useItemWiseDiscount from "./subcomponents/ItemWiseDiscount";
 import { useState } from "react";
 
 const QuotationsAndEstimates = () => {
+    const [ rate , setRate ] = useState();
+    const [ amount , setAmount ] = useState();
+    // const [ total , setTotal ] = useState(120);
+    const [ currencySymbol , setCurrencySymbol ] = useState("₹");
+    const [ totalRate, setTotalRate ] = useState(0);
+    const [ totalAmount, setTotalAmount ] = useState(0);
+    const [ reductionOnTotal , setReductionOnTotal ] = useState(0);
+    const [ additionalCharges , setAdditionalCharges ] = useState(0);
+
+    // const getItemWiseData = (IWdiscount, discountType) => {
+    //     console.log(IWdiscount, discountType);
+    // }
+    const getTotalRate = (totalRate,totalAmount) => {
+        setTotalRate(totalRate);
+        setTotalAmount(totalAmount);
+    }
+    
+    const getDiscountOnTotal = (valueText, keyText, discountType) => {
+        console.log(valueText, keyText, discountType);
+        setReductionOnTotal(keyText);
+    }
+    const getAdditionalCharges = (valueText, keyText, discountType) => {
+        console.log(valueText, keyText, discountType);
+        setAdditionalCharges(keyText);
+    }
+
     
     const [ invoiceNo, setInvoiceNo] = useState("A00001");
     const [ invoiceNoKey, setInvoiceNoKey] = useState("Quotation No");
@@ -39,48 +71,23 @@ const QuotationsAndEstimates = () => {
     const [ isAdditionalInfo , setIsAdditionalInfo ] = useState(false);
     const [ isContact , setIsContact ] = useState(false);
 
+    const [ isItemWiseDiscount , setIsItemWiseDiscount ] = useState(false);
+    const [ isDiscountOnTotal , setIsDiscountOnTotal ] = useState(false);
+    const [ isAdditionalCharges , setIsAdditionalCharges] = useState(false);
+    const [ hideTotals , setHideTotals ] = useState(false);
+    const [ isTotalInWords , setIsTotalInWords ] = useState(false);
+    const [ isAddMoreFields, setIsAddMoreFields ] = useState(false);
+    
+    const { render, IWdiscount, discountType } = useItemWiseDiscount({ setIsItemWiseDiscount });
+
     const onChange = (date, dateString) => {
         console.log(date, dateString);
         setInvoiceDate(date);
         console.log(invoiceDate);
-      };
-
-      const [fields, setFields] = useState([]);
-
-      const addNewField = () => {
-        const newField = { fieldName: '', value: '' };
-        setFields([...fields, newField]);
-      };
-    
-      const deleteField = (index) => {
-        const updatedFields = [...fields];
-        updatedFields.splice(index, 1);
-        setFields(updatedFields);
-      };
-    
-      const updateFieldName = (index, fieldName) => {
-        const updatedFields = [...fields];
-        updatedFields[index].fieldName = fieldName;
-        setFields(updatedFields);
-      };
-    
-      const updateFieldValue = (index, value) => {
-        const updatedFields = [...fields];
-        updatedFields[index].value = value;
-        setFields(updatedFields);
-      };
-
+    };
       
-    const showGSTModal = () => {
-        setIsGSTModalOpen(true);
-      };
-      const handleGSTOk = () => {
-        setIsGSTModalOpen(false);
-      };
-      const handleGSTCancel = () => {
-        setIsGSTModalOpen(false);
-      };
-
+    let d = new Date();
+    let date = `${d.getDate() < 9 ? '0' : ''}${d.getDate() + 1}/${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}/${d.getFullYear()}`;
 
     return (
         <>
@@ -90,7 +97,6 @@ const QuotationsAndEstimates = () => {
                 </div> 
 
             <div className="qae-top">
-
 
              <div className="qae-detail-section">
 
@@ -128,48 +134,19 @@ const QuotationsAndEstimates = () => {
                         </div>
 
                         <div className="qae-value">
-                            <DatePicker onChange={onChange} className="qae-input-value" placeholder="Enter Quotation Date" label="Quotation Date" name="invoiceNumber" value={invoiceDate}/>
+                            <DatePicker 
+                                onChange={onChange} 
+                                className="qae-input-value" 
+                                placeholder="Enter Quotation Date" 
+                                defaultValue={dayjs(date , 'DD/MM/YYYY')}
+                                label="Quotation Date" 
+                                name="invoiceNumber" 
+                                value={invoiceDate}
+                            />
                         </div>
                 </div>
 
-                <div>
-                    {fields.map((field, index) => (
-                        <div className="qae-details" key={index}>
-                        <div className="qae-key" style={{ display: 'flex' }}>
-                            <input
-                            type="text"
-                            name=""
-                            placeholder="Field Name"
-                            className="qae-label"
-                            style={{width:"120px"}}
-                            value={field.fieldName}
-                            onChange={(e) => updateFieldName(index, e.target.value)}
-                            />
-                            <span className="required">*</span>
-                        </div>
-                        <div className="qae-value">
-                            <input
-                            className="qae-input-value"
-                            label="Quotation No"
-                            direction="row"
-                            autoComplete="off"
-                            placeholder="Value"
-                            name="invoiceNumber"
-                            value={field.value}
-                            onChange={(e) => updateFieldValue(index, e.target.value)}
-                            />
-                        </div>
-                        <div className="qae-cross">
-                            <CloseOutlined onClick={() => deleteField(index)} style={{ color: 'rgb(115, 61, 217)'}} />
-                        </div>
-                        </div>
-                    ))}
-                    <button className="cs-discount-btn" onClick={addNewField}>
-                        <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '5px' }} />
-                        Add more Fields
-                    </button>
-                    </div>
-
+               <AddMoreFields />
              </div>
 
              <div className="qae-logo-section">
@@ -178,68 +155,7 @@ const QuotationsAndEstimates = () => {
              
             </div>
 
-        
-        <Row gutter={[16,16]} style={{marginBottom:'2rem'}}>
-            <Col flex="1">
-                <div className="qae-box1">
-                    <div className="qae-head">
-                        <div style={{padding:"5px", fontSize:'1.5rem'}}>Quotation Form</div>
-                        <span>(Your Details)</span>
-                    </div>
-
-                    <SelectBusiness style={{margin:'10px 0'}} />
-                
-                    <div className="qae-container" style={{marginTop:'10px'}}>
-
-                        <div className="qae-business-details"> Business details
-                        
-                            <div className="qae-business" style={{marginTop:'0.7rem'}}>
-                                <div className="qae-input-add" >Business Name</div>
-                                <div className="qae-input-val-add">Prishav Technologies</div>
-                            </div>
-                            <div className="qae-business">
-                                <div className="qae-input-add" >Address</div>
-                                <div className="qae-input-val-add">SRA 51 A Shipra Rivera, indirapuram, Uttar Pradesh, India 201014</div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </Col>
-
-            <Col flex="1">
-                <div className="qae-box1">
-                    <div className="qae-head">
-                        <div style={{padding:"5px", fontSize:'1.5rem'}}>Quotation Form</div>
-                        <span>(Your Details)</span>
-                    </div>
-
-                    <SelectBusiness style={{margin:'10px 0'}} />
-                
-                    <div className="qae-container" style={{marginTop:'10px'}}>
-
-                        <div className="qae-business-details"> Business details
-                        
-                            <div className="qae-business" style={{marginTop:'0.7rem'}}>
-                                <div className="qae-input" >Business Name</div>
-                                <div className="qae-input-val">Prishav Technologies</div>
-                            </div>
-
-                            <div className="qae-business">
-                                <div className="qae-input-add" >Address</div>
-                                <div className="qae-input-val-add" >SRA 51 A Shipra Rivera, indirapuram, Uttar Pradesh, India 201014</div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </Col>
-
-        </Row>
+        <BusinessDetails />
         
         <div style={{width:"100%"}}>
             <Checkbox onChange={() => setIsShipping(!isShipping)} style={{paddingRight: '5px'}}/>Add Shipping Details
@@ -250,9 +166,9 @@ const QuotationsAndEstimates = () => {
 
         <Row gutter={[16,16]}>
             <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
-               <Button onClick={showGSTModal} className="qae-btn" type="primary" icon={<PercentageOutlined />}> Add GST </Button>
+               <Button onClick={() => setIsGSTModalOpen(true)} className="qae-btn" type="primary" icon={<PercentageOutlined />}> Add GST </Button>
             </Col>
-                <Modal title="Configure Tax" open={isGSTModalOpen} onOk={handleGSTOk} onCancel={handleGSTCancel}>
+                <Modal title="Configure Tax" open={isGSTModalOpen} onOk={() => setIsGSTModalOpen(false)} onCancel={() => setIsGSTModalOpen(false)}>
                       <Divider />
                       <GSTModal />
                 </Modal>
@@ -260,7 +176,7 @@ const QuotationsAndEstimates = () => {
             <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6} style={{display:"flex",alignItems:"center"}}>
                 <label>Currency </label>
                 <span className="required" style={{paddingRight:'5px'}}>*</span>
-                <QuotationCurrency />
+                <QuotationCurrency setCurrencySymbol={setCurrencySymbol}/>
             </Col>
         
             <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
@@ -278,30 +194,79 @@ const QuotationsAndEstimates = () => {
         </Row>
     </div>
 
-        <ItemTable />
+        <ItemTable 
+            setAmount={setAmount} 
+            setRate={setRate} 
+            currencySymbol={currencySymbol}
+            {...{IWdiscount, discountType}}
+            isItemWiseDiscount={isItemWiseDiscount}
+            getTotalRate={getTotalRate}
+        />
 
         
         <Row gutter={[16,16]} style={{width:'100%',display:'flex',flexDirection:"column"}}>
             <Col xs={24} sm={24} offset={window.innerWidth > 576 ? 16 : 0}>
-                    <button className="qae-discount-btn">
+    
+                { isItemWiseDiscount ?
+                    { ...render }
+                    :
+                    <button onClick={() => setIsItemWiseDiscount(true)} className="qae-discount-btn">
                         <TagOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
                         Give Item wise Discount
                     </button>
+                }
 
-                    <button className="qae-discount-btn">
-                        <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
-                        Give Discount on Total
-                    </button>
+                { isItemWiseDiscount &&
+                    <>
+                    <div className="iwd-container">
+                        <div style={{paddingBottom:"10px"}}>
+                            <span style={{borderBottom:"1px solid gray",paddingBottom:"5px"}}>
+                            SubTotal:
+                            </span> 
+                            <span className="iwd-sub" >{currencySymbol} {totalRate}</span>
+                        </div>
+                        <div>
+                            <span style={{borderBottom:"1px solid gray",paddingBottom:"5px"}}>
+                            Amount: 
+                            </span>
+                            <span className="iwd-sub" >{currencySymbol} {totalAmount}</span>
+                        </div>
+                    </div>
+                    </>
+                }
 
-                    <button className="qae-discount-btn">
-                        <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
-                        Add Additional Charges
-                    </button>
-                    
-                    <button className="qae-discount-btn">
+                { !hideTotals &&
+                    <>
+                        { isDiscountOnTotal ?
+                            <DiscountOnTotal 
+                                setIsDiscountOnTotal={setIsDiscountOnTotal} 
+                                getDiscountOnTotal={getDiscountOnTotal}
+                            />
+                        : 
+                        <button onClick={() => setIsDiscountOnTotal(true)} className="qae-discount-btn">
+                                <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
+                                Give Discount on Total
+                            </button>
+                        }
+
+                        { isAdditionalCharges ?
+                            <AdditionalCharges 
+                                setIsAdditionalCharges={setIsAdditionalCharges}
+                                getAdditionCharges={getAdditionalCharges}
+                            />
+                            :
+                            <button onClick={() => setIsAdditionalCharges(true)} className="qae-discount-btn">
+                                <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
+                                Add Additional Charges
+                            </button>
+                        }
+                    </>
+                }      
+                    <button onClick={() => setHideTotals(!hideTotals)} className="qae-discount-btn">
                         <DollarOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
-                        Hide Totals
+                        {hideTotals ? "Show" : "Hide" } Totals
                     </button>
+
 
                     <button className="qae-discount-btn">
                         <Checkbox style={{ paddingRight: '8px' }} />
@@ -310,27 +275,49 @@ const QuotationsAndEstimates = () => {
 
                     <Divider />
 
+                { !hideTotals &&
+                    <>
                     <div className="qae-price">
                         <div className="qae-total-text">
                             Total (INR)
                         </div>
                         <div className="qae-total-price">
-                            ₹ 1
+                        {isDiscountOnTotal && isAdditionalCharges && reductionOnTotal !== 0 && additionalCharges !== 0 ? `₹ ${Number(totalAmount) + Number(additionalCharges) - Number(reductionOnTotal)}` :
+                            isDiscountOnTotal && reductionOnTotal !== 0 ? `₹ ${totalAmount - reductionOnTotal}` :
+                            isAdditionalCharges && additionalCharges !== 0 ? `₹ ${Number(totalAmount) + Number(additionalCharges)}` :
+                            `₹ ${totalAmount}`}
                         </div>
 
                     </div>
                     
                     <Divider />
+                    { isTotalInWords ?
+                        <TotalInWords 
+                            total={isDiscountOnTotal && isAdditionalCharges && reductionOnTotal !== 0 && additionalCharges !== 0 ? `${Number(totalAmount) + Number(additionalCharges) - Number(reductionOnTotal)}` :
+                            isDiscountOnTotal && reductionOnTotal !== 0 ? `${totalAmount - reductionOnTotal}` :
+                            isAdditionalCharges && additionalCharges !== 0 ? `${Number(totalAmount) + Number(additionalCharges)}` :
+                            `${totalAmount}`} 
+                            setIsTotalInWords={setIsTotalInWords}        
+                        />  
 
-                    <button className="qae-discount-btn">
+                     :   
+                        <button onClick={() => setIsTotalInWords(true)} className="qae-discount-btn">
                         <DollarOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px' , display:'flex',alignItems:'center'}} />
                         Show Total in Words
                     </button>
+                    }
 
-                    <button className="qae-discount-btn">
-                        <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px' , display:'flex',alignItems:'center'}} />
-                        Add More Fields
-                    </button>
+                    { isAddMoreFields ?
+                        <AddMoreFields />
+                        :
+                        <button onClick={() => setIsAddMoreFields(true)} className="qae-discount-btn">
+                            <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px' , display:'flex',alignItems:'center'}} />
+                            Add More Fields
+                        </button>
+                    }
+
+                    </>
+                }
 
             </Col>
         </Row>

@@ -7,6 +7,8 @@ function TermsAndCondition() {
         { id: 1, value: "Applicable taxes will be extra." },
         { id: 2, value: "Work will resume after advance payment." },
       ]);
+
+      console.log(terms);
     
       const addNewTerm = () => {
         const newTermId = terms.length + 1;

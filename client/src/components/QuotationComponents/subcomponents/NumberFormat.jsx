@@ -60,7 +60,7 @@ function CurrencyFormat() {
         </div>
         <div className='gst-container'>
             <div className='gst-label'>
-              <label>Select Number Format</label>
+              <label>Select Decimal Digitst</label>
             </div>
             <div className='nf-box2-container'>
               <Radio.Group onChange={handleDecimalPlacesChange} value={decimalPlaces}>
