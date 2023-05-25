@@ -3,7 +3,7 @@ import "./GSTModal.css";
 import { Radio } from 'antd';
 import { useState } from 'react';
 
-function CurrencyFormat() {
+function useCurrencyFormat() {
       const [number, setNumber] = useState(12345679);
       const [numberSystem, setNumberSystem] = useState('lakhs');
       const [decimalPlaces, setDecimalPlaces] = useState('0');
@@ -32,16 +32,15 @@ function CurrencyFormat() {
           const decimalPart = (number % 1).toFixed(decimalPlacesCount).substring(2);
           formattedNumber += `.${decimalPart.padEnd(decimalPlacesCount, '0')}`;
         }
-        
-        console.log("Formatted Number: " + formattedNumber);
-  
+          
         return `€${formattedNumber}`;
       };
       
-      
-            
-    
-      return (
+          
+    return {
+      numberSystem,
+      decimalPlaces,
+      render: (
         <>
         <div className='nf-top-desc'>Change between Roman and Arabic number systems. Million vs. Lakhs.</div>
         
@@ -76,9 +75,11 @@ function CurrencyFormat() {
         <div className='nf-result'>{formatNumber(number)}</div>
 
         </>
-      );
+      )
+
+    }
     };
     
     
     
-export default CurrencyFormat;
+export default useCurrencyFormat;

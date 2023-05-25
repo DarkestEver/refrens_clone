@@ -1,23 +1,63 @@
+
+GET http://localhost:3001/quotation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # GET http://localhost:3001/service
+###############3
+GET http://localhost:3001/upload
 
 ################################
-GET http://localhost:3001/quotation
+
 
 ######################
 POST http://localhost:3001/new/quotation
 Content-Type: application/json
 
 {
-  "quotation_no": "A000001",
-  "quotation_date": "23/01/2023",
+  "quotation_no": "TEST7",
+  "quotation_date": "2023-05-22",
+  "q_top_add_more_field": [
+    {
+      "fieldName": "Top Field 1",
+      "value": "Value 1"
+    },
+    {
+      "fieldName": "Top Field 2",
+      "value": "Value 2"
+    }
+  ],
   "business_details": {
     "your_business": {
-      "name": "Accenture",
-      "address": "Delhi"
+      "name": "Your Business Name",
+      "address": "Your Business Address"
     },
     "client": {
-      "name": "Accenture",
-      "address": "Delhi"
+      "name": "Client Name",
+      "address": "Client Address"
     }
   },
   "gst": {
@@ -32,9 +72,29 @@ Content-Type: application/json
     "format": "lakhs",
     "decimal_digits": "2"
   },
+  "table": [
+    {
+      "key": "0",
+      "Item": "Television",
+      "Quantity": "2",
+      "Rate": "₹ 1000",
+      "Amount": "₹ 2000"
+    },
+    {
+      "key": "1",
+      "Item": "Laptop",
+      "Quantity": "1",
+      "Rate": "₹ 500",
+      "Amount": "₹ 500"
+    }
+  ],
   "item_wise_discount": {
-    "discount_type": "%",
-    "discount_value": "10"
+    "discount": {
+      "discount_type": "Percentage",
+      "discount_value": "10"
+    },
+    "subtotal": "₹ 2500",
+    "amount": "₹ 2250"
   },
   "hideTotals": {
     "discount_on_total": {
@@ -44,36 +104,49 @@ Content-Type: application/json
     },
     "additional_charges": {
       "key": "Extra charges",
-      "value": "250",
+      "value": "100",
       "discount_type": "₹"
     },
-    "total_in_words": "Five Thousand"
+    "total": "₹ 2150",
+    "total_in_words": "Two Thousand One Hundred Fifty Rupees"
   },
-  "terms_and_conditions": [{
-    "id": "1",
-    "value": "Applicable taxes will be extra."
-  }, {
-    "id": "2",
-    "value": "Work will resume after advance payment."
-  }],
+  "q_bottom_add_more_field": [
+    {
+      "fieldName": "Bottom Field 1",
+      "value": "Value 1"
+    },
+    {
+      "fieldName": "Bottom Field 2",
+      "value": "Value 2"
+    }
+  ],
+  "terms_and_conditions": [
+    {
+      "id": "1",
+      "value": "Applicable taxes will be extra."
+    },
+    {
+      "id": "2",
+      "value": "Work will resume after advance payment."
+    }
+  ],
   "notes": "This is a note...",
-  "attachments": [{
-    "filename": "file.jpg",
-    "url": "https://unsplash.com"
-  }],
-  "signature": {
-    "signature": "lavesh.png",
-    "label": "Lave Bisht"
-  },
-  "additional_info": {
-    "key": "Good",
-    "value": "Yes"
-  },
+  "additional_info": [
+    {
+      "key": "Additional Info 1",
+      "value": "Value 1"
+    },
+    {
+      "key": "Additional Info 2",
+      "value": "Value 2"
+    }
+  ],
   "contact_info": {
-    "email": "lavesh@gmail.com",
-    "phone": "8588047983"
+    "email": "example@example.com",
+    "phone": "1234567890"
   }
 }
+
 
 
 # ###############

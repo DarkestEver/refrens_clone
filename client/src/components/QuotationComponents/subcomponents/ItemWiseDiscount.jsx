@@ -5,8 +5,6 @@ function useItemWiseDiscount({ setIsItemWiseDiscount }) {
     const [ IWdiscount , setIWDiscount ] = useState(0);
     const [ discountType , setDiscountType ] = useState('%');
 
-    // getItemWiseData(IWdiscount,discountType);
-
     return {
         IWdiscount,
         discountType,

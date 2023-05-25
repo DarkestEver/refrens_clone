@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const multer = require('multer');
 
 const dotenv = require("dotenv");
 
@@ -11,6 +12,17 @@ const app  = express();
 app.use(express.json());
 app.use(cors());
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'Uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    // cb(null, `${Date.now()}-${file.originalname}`); 
+    cb(null, file.originalname); 
+  },
+});
+
+const upload = multer({ storage });
 
 mongoose.set('strictQuery', false);
 
@@ -29,6 +41,39 @@ mongoose.connect( process.env.MONGODB_URL,
     
 const Service = require("./models/Service.js");
 const Quotation = require("./models/Quotation.js");
+const UploadFiles = require("./models/UploadFiles.js");
+// const Post = require("./models/PostImage.js");
+
+app.post('/upload/attachment', upload.single('file'), (req, res) => {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
+    }
+    console.log(req.file);
+  
+    const newFile = new UploadFiles({
+      file_name: req.file.originalname,
+      path: req.file.path,
+      destination: req.file.destination,
+      mimetype: req.file.mimetype,
+      file: req.file.filename, 
+      thumbUrl: req.file.thumbUrl
+       
+    });
+    console.log(newFile);
+  
+    newFile.save()
+      .then(() => res.send("Successfully uploaded file"))
+      .catch((err) => console.log(err));
+  });
+
+app.get('/upload/attachment', async (req,res) => {
+    try{
+        const upload = await UploadFiles.find();
+        res.json(upload);
+    } catch (err) {
+        res.status(500).json({message: err.message });
+    }
+})
 
 app.get("/quotation", async (req,res) => {
     try{
@@ -117,6 +162,23 @@ app.delete("/delete/service/:id", async (req,res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
+
+
+
+
+// app.post('/upload/signature', async (req, res) => {
+//   const body = req.body;
+//   try {
+//     const newImage = await Post.create(body);
+//     console.log(newImage);
+//     newImage.save();
+//     res.status(201).json({msg: "New image uploaded!!"})
+//   }catch(error){
+//     res.status(409).json({message: error.message});
+//   }
+// });
 
 
 app.listen(3001, () => console.log("Sever started!"));

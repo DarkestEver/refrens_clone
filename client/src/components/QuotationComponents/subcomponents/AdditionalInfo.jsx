@@ -1,8 +1,7 @@
 import { CloseOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import React , { useState } from 'react';
 
-function AdditionInfo() {
-    
+function useAdditionInfo() {
     const [fields, setFields] = useState([]);
 
     const addNewField = () => {
@@ -27,49 +26,52 @@ function AdditionInfo() {
       updatedFields[index].value = value;
       setFields(updatedFields);
     };
-
-    return (
+    
+    return {
+      fields,
+      render :(
         <>
         <div>
-                    {fields.map((field, index) => (
-                        <div className="qae-details" key={index} >
-                        <div className="qae-key" style={{ display: 'flex' }}>
-                            <input
-                            type="text"
-                            name=""
-                            placeholder="Field Name"
-                            className="qae-label"
-                            style={{width:"120px",background:" rgb(247,250,255)"}}
-                            value={field.fieldName}
-                            onChange={(e) => updateFieldName(index, e.target.value)}
-                            />
-                            <span className="required">*</span>
-                        </div>
-                        <div className="qae-value">
-                            <input
-                            className="qae-input-value"
-                            style={{background:" rgb(247,250,255)"}}
-                            label="Quotation No"
-                            direction="row"
-                            autoComplete="off"
-                            placeholder="Value"
-                            name="invoiceNumber"
-                            value={field.value}
-                            onChange={(e) => updateFieldValue(index, e.target.value)}
-                            />
-                        </div>
-                        <div className="qae-cross">
-                            <CloseOutlined onClick={() => deleteField(index)} style={{ color: 'rgb(115, 61, 217)'}} />
-                        </div>
-                        </div>
-                    ))}
-                    <button className="cs-discount-btn" onClick={addNewField}>
-                        <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '5px' }} />
-                        Add more Fields
-                    </button>
-                    </div>
+          {fields.map((field, index) => (
+              <div className="qae-details" key={index} >
+              <div className="qae-key" style={{ display: 'flex' }}>
+                  <input
+                  type="text"
+                  name=""
+                  placeholder="Field Name"
+                  className="qae-label"
+                  style={{width:"120px",background:" rgb(247,250,255)"}}
+                  value={field.fieldName}
+                  onChange={(e) => updateFieldName(index, e.target.value)}
+                  />
+                  <span className="required">*</span>
+              </div>
+              <div className="qae-value">
+                  <input
+                  className="qae-input-value"
+                  style={{background:" rgb(247,250,255)"}}
+                  label="Quotation No"
+                  direction="row"
+                  autoComplete="off"
+                  placeholder="Value"
+                  name="invoiceNumber"
+                  value={field.value}
+                  onChange={(e) => updateFieldValue(index, e.target.value)}
+                  />
+              </div>
+              <div className="qae-cross">
+                  <CloseOutlined onClick={() => deleteField(index)} style={{ color: 'rgb(115, 61, 217)'}} />
+              </div>
+              </div>
+          ))}
+          <button className="cs-discount-btn" onClick={addNewField}>
+              <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '5px' }} />
+              Add more Fields
+          </button>
+          </div>
         </>
     )
 };
+};
 
-export default AdditionInfo;
+export default useAdditionInfo;

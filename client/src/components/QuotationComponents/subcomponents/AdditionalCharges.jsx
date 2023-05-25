@@ -1,13 +1,16 @@
 import { CloseOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-function AdditionalCharges({ setIsAdditionalCharges , getAdditionCharges}) {
+function useAdditionalCharges({ setIsAdditionalCharges}) {
     const [ valueText , setValueText ] = useState("Extra Charges");
     const [ keyText , setKeyText ] = useState(0);
-    const [ discountType , setDiscountType ] = useState('%');
+    const [ discountType , setDiscountType ] = useState('₹');
 
-    getAdditionCharges(valueText, keyText, discountType);
-    return (
+return {
+    valueText, 
+    keyText, 
+    discountType,
+    render: (
         <>
         <div className="discount-bg">
                 <div className="n-top-desc">
@@ -47,5 +50,6 @@ function AdditionalCharges({ setIsAdditionalCharges , getAdditionCharges}) {
         </>
     )
 };
+};
 
-export default AdditionalCharges;
+export default useAdditionalCharges;

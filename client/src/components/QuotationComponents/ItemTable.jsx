@@ -1,27 +1,26 @@
 import { Button, Col, Form, Input, Row, Space, Table } from 'antd';
-import { CloseOutlined, PictureOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import SignatureUpload from "./subcomponents/SignatureUpload";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import SignatureUpload from "./subcomponents/UploadSignature";
+// import {  PictureOutlined } from '@ant-design/icons';
 
 const EditableContext = React.createContext(null);
 
 const EditableRow = ({ index, ...props }) => {
-  const [ isAddDescription , setIsAddDescription ] = useState(false);
-  const [ editorText , setEditorText ] = useState();
-  const [ isThumbnail , setIsThumbnail ] = useState(false);
+  // const [ isAddDescription , setIsAddDescription ] = useState(false);
+  // const [ editorText , setEditorText ] = useState();
+  // const [ isThumbnail , setIsThumbnail ] = useState(false);
   const [form] = Form.useForm();
   return (
       <>
     <Form form={form} component={false}>
       <EditableContext.Provider value={form}>
         <tr {...props} />
-        <tr>
-      <td 
-      // colSpan={columns.length}
-      >
+      {/* <tr>
+      <td >
         <Row gutter={[16, 16]} style={{ width: '100%' }}>
           <Col span={12}>
             { isAddDescription ?
@@ -30,7 +29,7 @@ const EditableRow = ({ index, ...props }) => {
               data={editorText}
               onChange={(event ,editor) => {
                   const data = editor.getData();
-                  setEditorText(data);
+                  setEditorText(data);  
               }}
               />
               :
@@ -57,7 +56,7 @@ const EditableRow = ({ index, ...props }) => {
           </Col>
         </Row>
       </td>
-    </tr>
+    </tr> */}
       </EditableContext.Provider>
     </Form>
 
@@ -132,13 +131,14 @@ const EditableCell = ({
 };
 
 
-const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, IWdiscount, discountType, getTotalRate }) => {
+const ItemTable = ({ setTableItems, currencySymbol, isItemWiseDiscount, IWdiscount, IWdiscountType , getTotalRateAndAmount}) => {
   const [ symbol , setSymbol ] = useState("₹");
   const [ itemRate , setItemRate ] = useState(1);
   const [ itemAmount , setItemAmount ] = useState(1);
   const [ totalRate , setTotalRate ] = useState(100);
   const [ totalAmount, setTotalAmount ] = useState(100);
 
+  
   useEffect(() => {
     setSymbol(currencySymbol);
   },[currencySymbol]);
@@ -156,13 +156,11 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
   useEffect(() => {
     const newDataSource = dataSource.map((item) => ({
       ...item,
-      Discount: `${IWdiscount} ${discountType}`,
+      Discount: `${IWdiscount} ${IWdiscountType}`,
     }));
     setDataSource(newDataSource);
 
-  },[IWdiscount,discountType]);
-
-  console.log(dataSource);
+  },[IWdiscount,IWdiscountType]);
     
   useEffect(() => {
     const calculateItemAmount = (item) => {
@@ -172,14 +170,11 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
   
       if (isItemWiseDiscount) {
           const discount = item.Discount ? parseFloat(item.Discount.replace(/[^0-9.]/g, "")) : 0;
-          console.log(discount);
           const discountAmount = amount * (discount / 100);
           amount -= discountAmount;
           setTotalAmount(amount);
       }
-  
-      console.log(amount);
-  
+    
       return amount;
     };
   
@@ -190,7 +185,8 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
     }));
   
     setDataSource(newDataSource);
-  }, [ dataSource ]);
+    setTableItems(dataSource);
+  }, [dataSource, isItemWiseDiscount, symbol]);
 
   useEffect(() => {
     let rateSum = 0;
@@ -209,8 +205,8 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
     setTotalRate(rateSum);
     setTotalAmount(amountSum);
   
-    getTotalRate(rateSum, amountSum);
-  }, [dataSource, getTotalRate]);
+    getTotalRateAndAmount(rateSum, amountSum);
+  }, [dataSource]);
   
   
   const [count, setCount] = useState(1);
@@ -259,16 +255,6 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
     },
   ];
 
-  console.log(isItemWiseDiscount);
-
-  // if (isItemWiseDiscount) {
-  //   defaultColumns.push({
-  //     title: 'Discount',
-  //     dataIndex: 'Discount',
-  //     editable: true
-  //   })
-  // }
-
   const handleAdd = () => {
 
     if(isItemWiseDiscount){
@@ -278,7 +264,7 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
         Quantity: '1',
         Rate: `${symbol} 1`,
         Amount: `${symbol} 1`,
-        Discount: `${IWdiscount} ${discountType}`
+        Discount: `${IWdiscount} ${IWdiscountType}`
       }
       setDataSource([...dataSource, newData]);
       setCount(count + 1);
@@ -305,11 +291,7 @@ const ItemTable = ({ setRate , setAmount , currencySymbol, isItemWiseDiscount, I
       ...row,
     });
     setDataSource(newData);
-    
-    // const amount = newData[0].Amount.replace(/\D/g, '');
-    // setItemAmount(parseInt(amount)); 
   };
-  console.log(itemAmount);
 
   const components = {
     body: {

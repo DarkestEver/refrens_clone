@@ -7,7 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 let index = 0;
 
-const GSTModal = () => {
+const useGSTModal = () => {
     const [items, setItems] = useState(['NONE','GST (India)','VAT','PPN','SST','HST','TAX']);
     const [selectedValue, setSelectedValue] = useState(undefined);
 
@@ -38,7 +38,10 @@ const GSTModal = () => {
     };
 
 
-    return (
+    return {
+        value,
+        selectedValue,
+    render: (
     <>
     <div> 
         <div>
@@ -99,6 +102,9 @@ const GSTModal = () => {
     </div>
     </> 
     )
+
 }
 
-export default GSTModal;
+}
+
+export default useGSTModal;

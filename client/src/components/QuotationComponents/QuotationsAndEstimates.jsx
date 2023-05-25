@@ -1,65 +1,55 @@
 import "./QuotationsAndEstimates.css";
 
-import { Button, Checkbox, Col, Divider, Input, Modal, Row, Space } from 'antd';
-import { CloseOutlined, DollarOutlined, EditOutlined, FieldNumberOutlined, MailOutlined, PaperClipOutlined, PercentageOutlined, PhoneOutlined, PlusSquareOutlined, TableOutlined, TagOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { Button, Checkbox, Col, DatePicker, Divider, Modal, Row, Space } from 'antd';
+import { CloseOutlined, DollarOutlined, EditOutlined, FieldNumberOutlined, PaperClipOutlined, PercentageOutlined, PhoneOutlined, PlusSquareOutlined, TagOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
-import AddMoreFields from "./subcomponents/AddMoreFields";
-import AdditionalCharges from "./subcomponents/AdditionalCharges";
-import AdditionalInfo from "./subcomponents/AdditionalInfo";
 import BusinessDetails from "./subcomponents/BusinessDetails";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { DatePicker } from 'antd';
-import DiscountOnTotal from "./subcomponents/DiscountOnTotal";
-import GSTModal from "./subcomponents/GSTModal";
 import ItemTable from './ItemTable';
-import NumberFormat from "./subcomponents/NumberFormat";
-import QuotationCurrency from "./QuotationCurrency";
-import ShippingDetails from "./ShippingDetails";
-import SignatureUpload from "./subcomponents/SignatureUpload";
-import TermsAndCondition from "./subcomponents/TermsAndCondition";
-import TotalInWords from "./subcomponents/TotalInWords";
-import Upload from './subcomponents/Upload';
+import axios from "axios";
 import dayjs from 'dayjs';
-import parse from "html-react-parser";
+import useAdditionalCharges from "./subcomponents/AdditionalCharges";
+import useAdditionalInfo from "./subcomponents/AdditionalInfo";
+import useClientAddress from './subcomponents/ClientAddress';
+import useClientName from "./subcomponents/ClientName";
+import useContactInfo from "./subcomponents/ContactInfo";
+import useDiscountOnTotal from "./subcomponents/DiscountOnTotal";
+import useGSTModal from "./subcomponents/GSTModal";
 import useItemWiseDiscount from "./subcomponents/ItemWiseDiscount";
-import { useState } from "react";
+import useNumberFormat from "./subcomponents/NumberFormat";
+import useQBAddMoreFields from "./subcomponents/QBAddMoreFields";
+import useQTAddMoreFields from "./subcomponents/QTAddMoreFields";
+import useQuotationCurrency from "./QuotationCurrency";
+import useSelectAddress from "./subcomponents/SelectAddress";
+import useSelectBusiness from "./subcomponents/SelectBusiness";
+import useTermsAndCondition from "./subcomponents/TermsAndCondition";
+import useTotalInWords from "./subcomponents/TotalInWords";
+import useUploadAttachments from './subcomponents/UploadAttachments';
+import useUploadSignature from "./subcomponents/UploadSignature";
+
+// import parse from "html-react-parser";
+
 
 const QuotationsAndEstimates = () => {
-    const [ rate , setRate ] = useState();
-    const [ amount , setAmount ] = useState();
-    // const [ total , setTotal ] = useState(120);
-    const [ currencySymbol , setCurrencySymbol ] = useState("₹");
+    const [ tableItems, setTableItems ] = useState();
     const [ totalRate, setTotalRate ] = useState(0);
     const [ totalAmount, setTotalAmount ] = useState(0);
-    const [ reductionOnTotal , setReductionOnTotal ] = useState(0);
-    const [ additionalCharges , setAdditionalCharges ] = useState(0);
-
-    // const getItemWiseData = (IWdiscount, discountType) => {
-    //     console.log(IWdiscount, discountType);
-    // }
-    const getTotalRate = (totalRate,totalAmount) => {
+    const [ total , setTotal ] = useState(0);
+    
+    const getTotalRateAndAmount = (totalRate,totalAmount) => {
         setTotalRate(totalRate);
         setTotalAmount(totalAmount);
     }
     
-    const getDiscountOnTotal = (valueText, keyText, discountType) => {
-        console.log(valueText, keyText, discountType);
-        setReductionOnTotal(keyText);
-    }
-    const getAdditionalCharges = (valueText, keyText, discountType) => {
-        console.log(valueText, keyText, discountType);
-        setAdditionalCharges(keyText);
-    }
-
-    
     const [ invoiceNo, setInvoiceNo] = useState("A00001");
     const [ invoiceNoKey, setInvoiceNoKey] = useState("Quotation No");
 
-    const [ invoiceDate, setInvoiceDate ] = useState();
+    const [ invoiceDate, setInvoiceDate ] = useState("22/05/2023");
     const [ invoiceDateKey, setInvoiceDateKey ] = useState("Quotation Date");
 
-    const [ isShipping, setIsShipping] = useState(false);
+    // const [ isShipping, setIsShipping] = useState(false);
     const [isGSTModalOpen, setIsGSTModalOpen] = useState(false);
     const [isNumberFormatModalOpen, setIsNumberFormatModalOpen] = useState(false);
     const [ isTermsAndCond , setIsTermsAndCond ] = useState(false);
@@ -67,7 +57,6 @@ const QuotationsAndEstimates = () => {
     const [ editorText , setEditorText ] = useState();
     const [ isAttachment, setIsAttachment ] = useState(false);
     const [ isSignature , setIsSignature ] = useState(false);
-    const [ addSignatureLabel, setAddSignatureLabel] = useState(true);
     const [ isAdditionalInfo , setIsAdditionalInfo ] = useState(false);
     const [ isContact , setIsContact ] = useState(false);
 
@@ -76,19 +65,132 @@ const QuotationsAndEstimates = () => {
     const [ isAdditionalCharges , setIsAdditionalCharges] = useState(false);
     const [ hideTotals , setHideTotals ] = useState(false);
     const [ isTotalInWords , setIsTotalInWords ] = useState(false);
-    const [ isAddMoreFields, setIsAddMoreFields ] = useState(false);
     
-    const { render, IWdiscount, discountType } = useItemWiseDiscount({ setIsItemWiseDiscount });
+    const { render: SelectAddressRender , selectedAddress : address } = useSelectAddress();
+    const { render: SelectBusinessRender , selectedBusiness : businessName } = useSelectBusiness();
+    const { render: ClientNameRender , selectedClient : clientName } = useClientName();
+    const { render: ClientAddressRender , selectedAddress : clientAddress } = useClientAddress();
 
-    const onChange = (date, dateString) => {
-        console.log(date, dateString);
-        setInvoiceDate(date);
-        console.log(invoiceDate);
-    };
+    const { render : ItemWiseDiscountRender, IWdiscount, discountType : IWdiscountType } = useItemWiseDiscount({ setIsItemWiseDiscount });
+    const { render : GSTModalRender, value: gstType , selectedValue: taxType } = useGSTModal();
+    const { render : CurrencyRender, currency, symbol: currencySymbol } = useQuotationCurrency();
+    const { render : NumberFormatRender, numberSystem , decimalPlaces } = useNumberFormat();
+    const { render : DiscountOnTotalRender, valuetext: reductionText, keyText: reductionOnTotal, discountType : reductionDiscountType} = useDiscountOnTotal({ setIsDiscountOnTotal });
+    const { render : AdditionalChargesRender, valueText : additionalChargesText, keyText : additionalCharges, discountType : additionalChargesType} = useAdditionalCharges({ setIsAdditionalCharges });
+    const { render : TotalInWordsRender , amountInWords } = useTotalInWords({ total: total ,setIsTotalInWords });
+    const { render : TermsAndConditionRender , terms } = useTermsAndCondition();
+    const { render : UploadAttachmentsRender , uploadedAttachment } = useUploadAttachments();
+    const { render : UploadSignatureRender , uploadedSignature , signatureLabel} = useUploadSignature();
+    const { render : AdditionalInfoRender , fields : additionalInfo } = useAdditionalInfo();
+    const { render : QBAddMoreFieldsRender , fields : QBFields } = useQBAddMoreFields();
+    const { render : QTAddMoreFieldsRender , fields : QTFields } = useQTAddMoreFields();
+    const { render : ContactInfoRender , email, phone } = useContactInfo({ setIsContact });
       
-    let d = new Date();
-    let date = `${d.getDate() < 9 ? '0' : ''}${d.getDate() + 1}/${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}/${d.getFullYear()}`;
+    console.log( uploadedSignature , signatureLabel );
 
+    const saveQuotation = () => {
+        const postData = async () => {
+            const data = {
+                quotation_no : invoiceNo,
+                quotation_date: invoiceDate,
+                q_top_add_more_field: QTFields,
+                business_details: {
+                    your_business: {
+                    name: businessName,
+                    address: address
+                    },
+                    client: {
+                    name: clientName,
+                    address: clientAddress
+                    }
+                },
+                gst: {
+                    tax_type: taxType,
+                    gst_type: gstType
+                },
+                currency: {
+                    short_form: currency,
+                    symbol: currencySymbol
+                },
+                number_format: {
+                    format: numberSystem,
+                    decimal_digits: decimalPlaces
+                },
+                table: tableItems,
+                item_wise_discount: {
+                    discount : {
+                    discount_value: IWdiscount,
+                    discount_type: IWdiscountType
+                    },
+                    subtotal: totalRate,
+                    Amount: totalAmount
+                },
+                hideTotals: {
+                    discount_on_total: {
+                    key: reductionText,
+                    value: reductionOnTotal,
+                    discount_type : reductionDiscountType
+                    },
+                    additional_charges: {
+                    key: additionalChargesText,
+                    value: additionalCharges,
+                    discount_type: additionalChargesType
+                    },
+                    total : total,
+                    total_in_words: amountInWords
+                },
+                q_bottom_add_more_field: QBFields,
+                terms_and_conditions: terms,
+                notes: editorText,
+                // attachments: [],
+                signature: {
+                    file: uploadedSignature,
+                    label: signatureLabel
+                },
+                additional_info: additionalInfo,
+                contact_info: {
+                    email: email,
+                    phone: phone
+                }
+              };
+            try {
+              await axios.post('http://localhost:3001/new/quotation', data, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+            
+            console.log("Succesfully posted!");
+            
+        } catch (error) {
+            console.log(error);
+            console.log("Error!");
+            }
+          }
+          
+        postData();    
+      };
+
+      const calculateTotalAmount = () => {
+        let calculatedTotalAmount = Number(totalAmount);
+    
+        if (isDiscountOnTotal && reductionOnTotal !== 0) {
+          calculatedTotalAmount -= Number(reductionOnTotal);
+        }
+    
+        if (isAdditionalCharges && additionalCharges !== 0) {
+          calculatedTotalAmount += Number(additionalCharges);
+        }
+    
+        return calculatedTotalAmount;
+      };
+    
+      useEffect(() => {
+        const result = calculateTotalAmount();
+        setTotal(result);
+      }, [reductionOnTotal, isDiscountOnTotal, additionalCharges, isAdditionalCharges]);
+
+      
     return (
         <>
             <div className="qae-container">
@@ -123,7 +225,6 @@ const QuotationsAndEstimates = () => {
                         <div className="qae-key">
                             <input
                             type="text"
-                            name=""
                             placeholder="Field Name"
                             className="qae-label"
                             style={{width:"120px"}}
@@ -135,18 +236,13 @@ const QuotationsAndEstimates = () => {
 
                         <div className="qae-value">
                             <DatePicker 
-                                onChange={onChange} 
-                                className="qae-input-value" 
-                                placeholder="Enter Quotation Date" 
-                                defaultValue={dayjs(date , 'DD/MM/YYYY')}
-                                label="Quotation Date" 
-                                name="invoiceNumber" 
-                                value={invoiceDate}
+                                className="qae-input-value"
+                                
                             />
                         </div>
                 </div>
 
-               <AddMoreFields />
+               { QTAddMoreFieldsRender }
              </div>
 
              <div className="qae-logo-section">
@@ -155,52 +251,59 @@ const QuotationsAndEstimates = () => {
              
             </div>
 
-        <BusinessDetails />
-        
-        <div style={{width:"100%"}}>
+        <BusinessDetails 
+            { ...{SelectAddressRender , address}} 
+            { ...{SelectBusinessRender , businessName}}  
+            { ...{ClientNameRender , clientName}}  
+            { ...{ClientAddressRender , clientAddress}}  
+        />   
+
+
+        {/* SHIPPING DETAILS  */}
+        {/* <div style={{width:"100%"}}>
             <Checkbox onChange={() => setIsShipping(!isShipping)} style={{paddingRight: '5px'}}/>Add Shipping Details
             { isShipping && <ShippingDetails /> }
-        </div>
+        </div> */}
     
     <div style={{width:"100%",margin:'2rem 0 2rem'}}>
 
         <Row gutter={[16,16]}>
-            <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={8} xxl={8}>
                <Button onClick={() => setIsGSTModalOpen(true)} className="qae-btn" type="primary" icon={<PercentageOutlined />}> Add GST </Button>
             </Col>
                 <Modal title="Configure Tax" open={isGSTModalOpen} onOk={() => setIsGSTModalOpen(false)} onCancel={() => setIsGSTModalOpen(false)}>
                       <Divider />
-                      <GSTModal />
+                        {/* eslint-disable-next-line no-undef */}
+                      { GSTModalRender }
                 </Modal>
 
-            <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6} style={{display:"flex",alignItems:"center"}}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={8} xxl={8} style={{display:"flex",alignItems:"center"}}>
                 <label>Currency </label>
                 <span className="required" style={{paddingRight:'5px'}}>*</span>
-                <QuotationCurrency setCurrencySymbol={setCurrencySymbol}/>
+                { CurrencyRender }
             </Col>
         
-            <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
+            <Col xs={24} sm={12} md={12} lg={6} xl={8} xxl={8}>
                 <Button onClick={() => setIsNumberFormatModalOpen(true)} type="primary" className="qae-btn" icon={<FieldNumberOutlined />}> 123 Change Number Format </Button>
             </Col>
                 <Modal title="Change Number Format" open={isNumberFormatModalOpen} onOk={() => setIsNumberFormatModalOpen(false)} onCancel={() => setIsNumberFormatModalOpen(false)}>
                     <Divider />
-                    <NumberFormat />  
+                    { NumberFormatRender }
                 </Modal>
 
-            <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
+            {/* <Col xs={24} sm={12} md={12} lg={6} xl={6} xxl={6}>
                 <Button type="primary" className="qae-btn" icon={<TableOutlined />}>Rename / Add Fields</Button>
-            </Col>
+            </Col> */}
             
         </Row>
     </div>
 
         <ItemTable 
-            setAmount={setAmount} 
-            setRate={setRate} 
+            setTableItems={setTableItems}
             currencySymbol={currencySymbol}
-            {...{IWdiscount, discountType}}
+            {...{IWdiscount, IWdiscountType}}
             isItemWiseDiscount={isItemWiseDiscount}
-            getTotalRate={getTotalRate}
+            getTotalRateAndAmount={getTotalRateAndAmount}
         />
 
         
@@ -208,7 +311,7 @@ const QuotationsAndEstimates = () => {
             <Col xs={24} sm={24} offset={window.innerWidth > 576 ? 16 : 0}>
     
                 { isItemWiseDiscount ?
-                    { ...render }
+                    { ...ItemWiseDiscountRender }
                     :
                     <button onClick={() => setIsItemWiseDiscount(true)} className="qae-discount-btn">
                         <TagOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
@@ -238,10 +341,7 @@ const QuotationsAndEstimates = () => {
                 { !hideTotals &&
                     <>
                         { isDiscountOnTotal ?
-                            <DiscountOnTotal 
-                                setIsDiscountOnTotal={setIsDiscountOnTotal} 
-                                getDiscountOnTotal={getDiscountOnTotal}
-                            />
+                            { ...DiscountOnTotalRender }
                         : 
                         <button onClick={() => setIsDiscountOnTotal(true)} className="qae-discount-btn">
                                 <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
@@ -250,10 +350,7 @@ const QuotationsAndEstimates = () => {
                         }
 
                         { isAdditionalCharges ?
-                            <AdditionalCharges 
-                                setIsAdditionalCharges={setIsAdditionalCharges}
-                                getAdditionCharges={getAdditionalCharges}
-                            />
+                            { ...AdditionalChargesRender }
                             :
                             <button onClick={() => setIsAdditionalCharges(true)} className="qae-discount-btn">
                                 <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
@@ -279,26 +376,19 @@ const QuotationsAndEstimates = () => {
                     <>
                     <div className="qae-price">
                         <div className="qae-total-text">
-                            Total (INR)
+                            Total ({currency})
                         </div>
                         <div className="qae-total-price">
-                        {isDiscountOnTotal && isAdditionalCharges && reductionOnTotal !== 0 && additionalCharges !== 0 ? `₹ ${Number(totalAmount) + Number(additionalCharges) - Number(reductionOnTotal)}` :
-                            isDiscountOnTotal && reductionOnTotal !== 0 ? `₹ ${totalAmount - reductionOnTotal}` :
-                            isAdditionalCharges && additionalCharges !== 0 ? `₹ ${Number(totalAmount) + Number(additionalCharges)}` :
-                            `₹ ${totalAmount}`}
+                            { currencySymbol }
+                            { total === 0 ? totalAmount : total }
                         </div>
 
                     </div>
                     
                     <Divider />
                     { isTotalInWords ?
-                        <TotalInWords 
-                            total={isDiscountOnTotal && isAdditionalCharges && reductionOnTotal !== 0 && additionalCharges !== 0 ? `${Number(totalAmount) + Number(additionalCharges) - Number(reductionOnTotal)}` :
-                            isDiscountOnTotal && reductionOnTotal !== 0 ? `${totalAmount - reductionOnTotal}` :
-                            isAdditionalCharges && additionalCharges !== 0 ? `${Number(totalAmount) + Number(additionalCharges)}` :
-                            `${totalAmount}`} 
-                            setIsTotalInWords={setIsTotalInWords}        
-                        />  
+                
+                        { ...TotalInWordsRender }  
 
                      :   
                         <button onClick={() => setIsTotalInWords(true)} className="qae-discount-btn">
@@ -307,15 +397,7 @@ const QuotationsAndEstimates = () => {
                     </button>
                     }
 
-                    { isAddMoreFields ?
-                        <AddMoreFields />
-                        :
-                        <button onClick={() => setIsAddMoreFields(true)} className="qae-discount-btn">
-                            <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px' , display:'flex',alignItems:'center'}} />
-                            Add More Fields
-                        </button>
-                    }
-
+                        { QBAddMoreFieldsRender }
                     </>
                 }
 
@@ -363,7 +445,7 @@ const QuotationsAndEstimates = () => {
                     <div className="n-top-desc">Terms & Conditions
                         <CloseOutlined onClick={() => setIsTermsAndCond(false)}/>
                     </div>
-                    <TermsAndCondition />                
+                    { TermsAndConditionRender }              
                 </div>
                 </>
             }
@@ -392,7 +474,7 @@ const QuotationsAndEstimates = () => {
                     <div className="n-top-desc">Attachments
                         <CloseOutlined onClick={() => setIsAttachment(false)}/>
                     </div>
-                    <Upload />                  
+                    { UploadAttachmentsRender }              
                 </div>
                 </>
             }
@@ -405,21 +487,7 @@ const QuotationsAndEstimates = () => {
                     <div className="n-top-desc">Signature
                         <CloseOutlined onClick={() => setIsSignature(false)}/>
                     </div>
-                    <SignatureUpload />
-                    { addSignatureLabel ?
-                        <>  
-                            <div className="n-top-desc" style={{paddingBottom: '0.5rem'}}>Add Signature Label
-                                <CloseOutlined onClick={() => setAddSignatureLabel(false)}/>
-                            </div>
-                            <Input placeholder="Add your Name" defaultValue="Authorized Signature" />
-                        </>
-                    :
-                        <div class='s-sig-label' onClick={() => setAddSignatureLabel(true)}>
-                            <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
-                            Add Signature Label
-                        </div>
-                    }
-                    
+                    { UploadSignatureRender }
                     
                 </div>
                 </div>
@@ -431,42 +499,24 @@ const QuotationsAndEstimates = () => {
                     <div className="n-top-desc">Add Additional Info
                         <CloseOutlined onClick={() => setIsAdditionalInfo(false)}/>
                     </div>
-                    <AdditionalInfo />
+                    { AdditionalInfoRender }
                     
                 </div>
                 </>
             }
             
-            { isContact && 
-                <>
-                <div className="n-notes">
-                    <div className="n-top-desc">Your Contact Details
-                        <CloseOutlined onClick={() => setIsContact(false)}/>
-                    </div>
-                    <div className="contact-box">
-                        <Input defaultValue="For any enquiry, reach out via"  />
-                        <Input defaultValue="email at"  />
-                        <Input type="email" placeholder="Your email (optional)" prefix={<MailOutlined />} />
-                        <Input defaultValue="call on" />
-                        <Input placeholder="+91-XXXXXXXXXX" prefix={<PhoneOutlined />} />
-                    </div>
-                </div>
-                </>
-            }
+            { isContact && { ...ContactInfoRender } }
         </Space>
-
 
             <Row gutter={[16,16]} style={{marginTop:"3rem"}}>
                 <Col>
-                    <Button type="primary" style={{background:"#fefefe",color:"black",border: "1px solid #C6D2D9", padding: "0.8rem 1rem", width:"fit-content",height:"auto"}}>Save as Draft</Button>
+                    <Button  type="primary" style={{background:"#fefefe",color:"black",border: "1px solid #C6D2D9", padding: "0.8rem 1rem", width:"fit-content",height:"auto"}}>Save as Draft</Button>
                 </Col>
                 <Col>
-                    <Button type="primary" style={{background:"rgb(222,23,94)",color:"white", padding: "0.8rem 1rem", width:"fit-content",height:"auto"}}>Save & Continue</Button>
+                    <Button onClick={saveQuotation} type="primary" style={{background:"rgb(222,23,94)",color:"white", padding: "0.8rem 1rem", width:"fit-content",height:"auto"}}>Save & Continue</Button>
                 </Col>
             </Row>
 
-
-        
             </div>
         </>
     )

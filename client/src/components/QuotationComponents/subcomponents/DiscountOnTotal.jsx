@@ -1,15 +1,18 @@
 import { CloseOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-function DiscountOnTotal({ setIsDiscountOnTotal , getDiscountOnTotal }) {
+function useDiscountOnTotal({ setIsDiscountOnTotal }) {
+    
     const [ valueText , setValueText ] = useState("Reduction");
     const [ keyText , setKeyText ] = useState(0);
-    const [ discountType , setDiscountType ] = useState('%');
+    const [ discountType , setDiscountType ] = useState('₹');
 
-    getDiscountOnTotal(valueText, keyText, discountType);
-
-    return (
-        <>
+    return {
+        valueText,
+        keyText,
+        discountType,
+        render: (
+            <>
         <div className="discount-bg">
                 <div className="n-top-desc">
                         <div className="qae-key">
@@ -47,6 +50,7 @@ function DiscountOnTotal({ setIsDiscountOnTotal , getDiscountOnTotal }) {
         </div>
         </>
     )
+} 
 };
 
-export default DiscountOnTotal;
+export default useDiscountOnTotal;

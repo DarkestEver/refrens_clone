@@ -1,7 +1,17 @@
+import { useEffect, useState } from "react";
+
 import { CloseOutlined } from "@ant-design/icons";
 
-function TotalInWords({ total, setIsTotalInWords }) {
-    function numberToWords(number) {
+function useTotalInWords({ total, setIsTotalInWords }) {
+  const [ amountInWords , setAmountInWords ] = useState("Zero Only");
+
+  useEffect(() => {
+    let totalAmount = numberToWords(total);
+    let totalAmountOnly = `${totalAmount} Only`;
+    setAmountInWords(totalAmountOnly);
+  },[total])
+
+  function numberToWords(number) {
         const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
         const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
         const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
@@ -61,8 +71,9 @@ function TotalInWords({ total, setIsTotalInWords }) {
         justifyContent: "space-between",
         
     }
-      
-    return (
+    return  {
+      amountInWords,
+      render: (
         <>
         <div style={totalWrapper}>
 
@@ -71,13 +82,14 @@ function TotalInWords({ total, setIsTotalInWords }) {
                 <div><CloseOutlined onClick={() => setIsTotalInWords(false)}/></div>
             </div>
             <div style={totalWords}>
-                { numberToWords(total) } Only
+               { amountInWords } 
             </div>
                 
         </div>
                 
         </>
     )
+  }
 };
 
-export default TotalInWords;
+export default useTotalInWords;

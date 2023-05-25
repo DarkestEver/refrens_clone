@@ -2,14 +2,12 @@ import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons";
 
 import { useState } from "react";
 
-function TermsAndCondition() {
+function useTermsAndCondition() {
     const [terms, setTerms] = useState([
         { id: 1, value: "Applicable taxes will be extra." },
         { id: 2, value: "Work will resume after advance payment." },
       ]);
 
-      console.log(terms);
-    
       const addNewTerm = () => {
         const newTermId = terms.length + 1;
         const newTerm = { id: newTermId, value: "" };
@@ -31,7 +29,9 @@ function TermsAndCondition() {
         setTerms(updatedTerms);
       };
     
-    return (
+    return {
+      terms,
+      render : (
         <>
             <div className="gst-container">
                 <ol style={{paddingLeft: '1.5rem'}} >
@@ -59,5 +59,6 @@ function TermsAndCondition() {
     )
     
 }
+};
 
-export default TermsAndCondition;
+export default useTermsAndCondition;
