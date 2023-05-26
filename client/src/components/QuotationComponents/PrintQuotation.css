@@ -1,0 +1,284 @@
+body {
+    background-color: rgb(243,245,247);
+}
+.q-container {
+    padding: 32px;
+    background-color: white;
+    border-radius: 6px;
+    margin: 0px auto 20px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 1rem;
+    color:rgb(32, 23, 66);
+}
+
+.q-top-wrapper {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+.q-heading {
+    display: flex;
+    flex-direction: row;
+    color: rgba(101, 57, 192, 1);
+}
+.q-heading h1 {
+    font-weight: 400;
+}
+
+.q-header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.q-hash-table {
+    text-align: left;
+    vertical-align: top;
+    color: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px 5px 0;
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+.q-no-date {
+    
+}
+
+.q-no-date-wrapper {
+    
+}
+
+.q-td {
+    padding: 5px 15px 5px 0;
+    font-weight: bold;
+    border: none;
+    text-align: left;
+}
+
+.q-logo {
+    text-align: center;
+    margin: 0;
+    align-items: flex-start;
+}
+
+.q-box {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.q-box-wrapper {
+    flex: 1;
+    text-align: left;
+    background: var(--secondary-background, rgba(101, 57, 192, 0.1));
+    padding: 15px;
+    margin-top: 10px;
+    margin-right: 5px;
+    border-radius: 6px;
+}
+
+.q-from , .q-to {
+    
+}
+
+.q-box-head {
+    line-height: 31px;
+    margin-bottom: 0;
+    font-size: 1.5em;
+    color: rgba(101, 57, 192, 1);
+}
+
+.q-box-company {
+    font-weight: bolder;
+}
+
+.q-box-address {
+
+}
+
+.q-table table {
+    width: 100%;
+}
+
+.q-table th {
+    background: rgba(101, 57, 192, 1);
+    color: white;
+}
+
+.q-table td {
+    padding: 8px;
+    border: 0;
+    background: var(--secondary-background, rgba(101, 57, 192, 0.1));
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.q-bank-total-wrapper {
+    display: flex;
+    justify-content: space-between;
+    page-break-inside: avoid;
+    margin-top: 0.5rem
+}
+
+.q-bank-words-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-width: 60%;
+}
+
+.q-bank-words {
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.invoice-items-table {
+    border: 0;
+    overflow: hidden;
+    border-style: hidden;
+    margin: 0 0 10px;
+    width: 100%;
+    border-radius: 6px;
+    border-color: rgba(101, 57, 192, 1);
+    box-shadow: 0 0 0 1px rgba(101, 57, 192, 0.1);
+    text-align: left;
+    border-collapse: collapse;
+}
+.invoice-total-in-words {
+    text-transform: uppercase;
+}
+
+.q-total-sig-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin-left: 24px;
+    text-align: right;
+}
+
+.q-table thead {
+    padding: 20px 0;
+}
+
+.q-total-sig-wrapper table {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.q-total-sig-wrapper th {
+    padding: 8px 16px 8px 0px;
+    border: none;
+    font-weight: 400;
+    text-align: left;
+}
+
+.q-total-sig-wrapper td {
+    padding: 8px 16px 8px 0px;
+    border: none;
+    text-align: right;
+}
+
+.q-total-sig-wrapper tr:last-child th,.q-total-sig-wrapper tr:last-child td {
+    border-top: solid 1px black !important;
+    border-bottom: solid 1px black !important;
+    font-size: 20px ;
+    font-weight: 600;
+    color: black;
+}
+
+.q-logo-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.q-logo-wrapper img{
+    max-width: 240px;
+    max-height: 120px;
+    object-fit: scale-down;
+    border-style: none;
+}
+
+.q-invoice-terms-wrapper , .q-invoice-notes-wrapper , .q-attachment-wrapper{
+    margin-top: 20px;
+}
+
+.terms-heading , .notes-heading, .attachment-heading {
+    margin-bottom: 0.2rem;
+    font-size: 16.38px;
+    page-break-inside: avoid;
+    color: rgba(101, 57, 192, 1);
+}
+
+.invoice-terms {
+    list-style: decimal !important;
+    padding-left: 25px;
+}
+
+.ck-editor-contents {
+    overflow-wrap: break-word;
+}
+
+.ck-editor-contents p {
+    margin: 10px 0;
+    color: #222;
+    orphans: 3;
+    widows: 3;
+}
+
+.q-invoice-terms-wrapper th  {
+    padding: 8px 16px 8px 0px;
+    border: none;
+    font-weight: 400;
+    text-align: left;
+    vertical-align: top;
+    color: rgba(0, 0, 0, 0.5);
+}
+.q-invoice-terms-wrapper td {
+    padding: 8px 16px 8px 0px;
+    border: none;
+    text-align: right;
+    font-weight: 400;
+}
+
+.q-invoice-contact-wrapper {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.phone-input {
+    direction: ltr;
+}
+
+.attachment-link-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.attachment-link {
+    text-align: left;
+    margin-bottom: 4px;
+    background: none;
+    display: flex;
+}
+
+.attachment-link-wrapper a {
+    text-decoration: underline;
+    color: rgb(101, 57, 192);
+    background-color: transparent;
+}
+
+.invoice-table {
+    overflow: hidden;
+    border-radius: 2px;
+    border-style: hidden;
+    box-shadow: none;
+}

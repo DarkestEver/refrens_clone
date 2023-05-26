@@ -238,9 +238,9 @@ input:focus, select:focus {
     background: green;
 }
 
-table {
+/* table {
     background-color: rgb(247,250,255)
-}
+} */
 
 .iwd-container{
     display: flex;

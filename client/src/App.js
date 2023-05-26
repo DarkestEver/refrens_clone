@@ -7,6 +7,7 @@ import EditService from './components/ServicesComponents/EditService';
 import Error from './components/ServicesComponents/sub-components/Error';
 import Failure from './components/ServicesComponents/sub-components/Failure';
 import Home from './components/ServicesComponents/Services';
+import PrintOuotation from './components/QuotationComponents/PrintQuotation';
 import QuotationsAndEstimates from './components/QuotationComponents/QuotationsAndEstimates';
 import React from "react";
 import Success from './components/ServicesComponents/sub-components/Success';
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/quotations-and-estimates" element={<QuotationsAndEstimates />} />
+          <Route path="/quotation" element={<PrintOuotation />} />
           <Route path="/create-service" element={<CreateService />} />
           <Route path="/edit-service" element={<EditService />} />
           <Route path="/service/success" element={<Success />} />
