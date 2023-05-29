@@ -29,9 +29,6 @@ import useTotalInWords from "./subcomponents/TotalInWords";
 import useUploadAttachments from './subcomponents/UploadAttachments';
 import useUploadSignature from "./subcomponents/UploadSignature";
 
-// import parse from "html-react-parser";
-
-
 const QuotationsAndEstimates = () => {
     const [ tableItems, setTableItems ] = useState();
     const [ totalRate, setTotalRate ] = useState(0);
@@ -86,7 +83,9 @@ const QuotationsAndEstimates = () => {
     const { render : QTAddMoreFieldsRender , fields : QTFields } = useQTAddMoreFields();
     const { render : ContactInfoRender , email, phone } = useContactInfo({ setIsContact });
       
-    console.log( uploadedSignature , signatureLabel );
+    // console.log( uploadedSignature , signatureLabel );
+    console.log(uploadedAttachment);
+
 
     const saveQuotation = () => {
         const postData = async () => {
@@ -123,18 +122,18 @@ const QuotationsAndEstimates = () => {
                     discount_type: IWdiscountType
                     },
                     subtotal: totalRate,
-                    Amount: totalAmount
+                    amount: totalAmount
                 },
                 hideTotals: {
                     discount_on_total: {
-                    key: reductionText,
-                    value: reductionOnTotal,
-                    discount_type : reductionDiscountType
+                        field: reductionText,
+                        value: reductionOnTotal,
+                        discount_type : reductionDiscountType
                     },
                     additional_charges: {
-                    key: additionalChargesText,
-                    value: additionalCharges,
-                    discount_type: additionalChargesType
+                        field: additionalChargesText,
+                        value: additionalCharges,
+                        discount_type: additionalChargesType
                     },
                     total : total,
                     total_in_words: amountInWords
@@ -142,11 +141,13 @@ const QuotationsAndEstimates = () => {
                 q_bottom_add_more_field: QBFields,
                 terms_and_conditions: terms,
                 notes: editorText,
-                // attachments: [],
-                signature: {
-                    file: uploadedSignature,
-                    label: signatureLabel
-                },
+                // attachments: [{
+                //     file: uploadedAttachment
+                // }],
+                // signature: {
+                //     file: uploadedSignature,
+                //     label: signatureLabel
+                // },
                 additional_info: additionalInfo,
                 contact_info: {
                     email: email,

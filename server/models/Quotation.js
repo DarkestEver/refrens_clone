@@ -68,12 +68,12 @@ const quotationSchema = new mongoose.Schema({
   },
   hideTotals: {
     discount_on_total: {
-      key: String,
+      field: String,
       value: String,
       discount_type: String
     },
     additional_charges: {
-      key: String,
+      field: String,
       value: String,
       discount_type: String
     },
@@ -89,15 +89,15 @@ const quotationSchema = new mongoose.Schema({
     value: String
   }],
   notes: String,
-  // attachments: [{
-  //   type: String,
-  // }],
+  attachments: [{
+    file: String,
+  }],
   signature: {
     file: String,
     label: String
   },
   additional_info: [{
-    key: String,
+    fieldName: String,
     value: String
   }],
   contact_info: {

@@ -164,8 +164,17 @@ app.delete("/delete/service/:id", async (req,res) => {
 });
 
 
-
-
+app.post('/upload/signature', async (req, res) => {
+  const body = req.body;
+  try {
+    const newImage = await Post.create(body);
+    console.log(newImage);
+    newImage.save();
+    res.status(201).json({msg: "New image uploaded!!"})
+  }catch(error){
+    res.status(409).json({message: error.message});
+  }
+});
 
 
 // app.post('/upload/signature', async (req, res) => {

@@ -1,6 +1,7 @@
 import { CloseOutlined, PlusOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { Input, Modal, Upload, message } from 'antd';
 
+import axios from "axios";
 import { useState } from "react";
 
 const url = "http://localhost:3001/upload/signature";
@@ -9,7 +10,7 @@ const useSignatureUpload = () => {
     const [ uploadedSignature , setUploadedSignature ] = useState(null);
     const [ addSignatureLabel, setAddSignatureLabel] = useState(true);
     const [ signatureLabel , setSignatureLabel ] = useState("Authorized Signature");
-    // const [ postImage , setPostImage ] = useState({myFile : ""});
+    const [ postImage , setPostImage ] = useState({myFile : ""});
 
     const getBase64 = (file) =>
         new Promise((resolve, reject) => {
@@ -56,8 +57,8 @@ const useSignatureUpload = () => {
           const base64 = await getBase64(info.file.originFileObj); // Use originFileObj to get the file for base64 conversion
           setUploadedSignature(base64);
           
-          // setPostImage({ myFile: base64 });
-          // createPost(postImage);
+          setPostImage({ myFile: base64 });
+          createPost(postImage);
 
         } else if (info.file.status === 'error') {
           message.error(`${info.file.name} file upload failed.`);
@@ -65,18 +66,18 @@ const useSignatureUpload = () => {
         }
       };
 
-    // const createPost = async (postImage) => {
-    //   try {
-    //     await axios.post(url, postImage);
-    //     console.log("uploaded!!");
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
+    const createPost = async (postImage) => {
+      try {
+        await axios.post(url, postImage);
+        console.log("uploaded!!");
+      } catch (err) {
+        console.log(err);
+      }
+    }
  
   const props = {
     name: 'file',
-    action: url,
+    // action: url,        
     // headers: {
     //   authorization: 'authorization-text',
     // },
@@ -120,17 +121,17 @@ const useSignatureUpload = () => {
             </Modal>
 
             { addSignatureLabel ?
-                        <>  
-                            <div className="n-top-desc" style={{paddingBottom: '0.5rem'}}>Add Signature Label
-                                <CloseOutlined onClick={() => setAddSignatureLabel(false)}/>
-                            </div>
-                            <Input onChange={(e) => setSignatureLabel(e.target.value)} placeholder="Add your Name" value={signatureLabel} />
-                        </>
-                    :
-                        <div class='s-sig-label' onClick={() => setAddSignatureLabel(true)}>
-                            <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
-                            Add Signature Label
-                        </div>
+                   <>  
+                       <div className="n-top-desc" style={{paddingBottom: '0.5rem'}}>Add Signature Label
+                           <CloseOutlined onClick={() => setAddSignatureLabel(false)}/>
+                       </div>
+                       <Input onChange={(e) => setSignatureLabel(e.target.value)} placeholder="Add your Name" value={signatureLabel} />
+                   </>
+               :
+                   <div class='s-sig-label' onClick={() => setAddSignatureLabel(true)}>
+                       <PlusSquareOutlined style={{ color: 'rgb(115, 61, 217)', paddingRight: '8px', display:'flex',alignItems:'center' }} />
+                       Add Signature Label
+                   </div>
             }
         </>
     )

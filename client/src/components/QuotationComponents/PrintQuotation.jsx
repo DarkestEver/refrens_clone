@@ -1,8 +1,37 @@
 import './PrintQuotation.css';
 
-import { TweenOneGroup } from 'rc-tween-one';
+import { useEffect, useState } from 'react';
+
+import axios from 'axios';
+import parse from "html-react-parser";
 
 function PrintOuotation(){
+    const [ data , setData ] = useState();
+    const [ symbol , setSymbol ] = useState();
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('http://localhost:3001/quotation');
+            const quotationData = response.data;
+            
+            console.log(quotationData[3]);
+            setData(quotationData[3]);
+            setSymbol(quotationData[3].currency.symbol);
+            
+            console.log("Quotation data retrieved successfully!");
+          } catch (error) {
+            console.log(error);
+            console.log("Error retrieving quotation data!");
+          }
+        };
+        fetchData();
+    }, []);
+
+    if (!data) {
+        return <div>Loading...</div>; 
+    }
+          
     return (
         <>
             <div className="q-container">
@@ -23,14 +52,24 @@ function PrintOuotation(){
                                             <th className='q-hash-table'>
                                                 Quotation No #
                                             </th>
-                                            <td className='q-td'>A000001</td>
+                                            <td className='q-td'>{data?.quotation_no}</td>
                                         </tr>
                                         <tr>
                                             <th className='q-hash-table'>
                                                 Quotation Date 
                                             </th>
-                                            <td className='q-td'>May 18, 2023</td>
+                                            <td className='q-td'>{data?.quotation_date}</td>
                                         </tr>
+                                            {data.q_top_add_more_field.map((item) => {
+                                                return (
+                                                    <> 
+                                                    <tr>
+                                                        <th className='q-hash-table'>{item.fieldName}</th>
+                                                        <td className='q-td'>{item.value}</td>
+                                                    </tr>
+                                                    </>
+                                                )
+                                            })}
                                     </tbody>
                                 </table>
                             </div>
@@ -49,16 +88,16 @@ function PrintOuotation(){
                     <div className="q-box-wrapper">
                         <div className="q-from">
                             <div className="q-box-head">Quotation From</div>
-                            <div className="q-box-company">Prishav-technologies</div>
-                            <div className="q-box-address">Nodida Sector 52, indiarpuram, Uttar Pradesh, 201014</div>
+                            <div className="q-box-company">{data?.business_details.your_business.name}</div>
+                            <div className="q-box-address">{data?.business_details.your_business.address}</div>
                         </div>
                     </div>
 
                     <div className="q-box-wrapper">
                         <div className="q-to">
                             <div className="q-box-head">Quotation To</div>
-                            <div className="q-box-company">Accenture</div>
-                            <div className="q-box-address">Nodida Sector 52, indiarpuram, Uttar Pradesh, 201014</div>
+                            <div className="q-box-company">{data?.business_details.client.name}</div>
+                            <div className="q-box-address">{data?.business_details.client.address}</div>
                         </div>
                     </div>
 
@@ -80,22 +119,18 @@ function PrintOuotation(){
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>Bag</td>
-                                    <td>1</td>
-                                    <td>₹ 3000</td>
-                                    <td>10%</td>
-                                    <td>₹ 2699</td>
-                                </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Laptop</td>
-                                    <td>1</td>
-                                    <td>₹ 25000</td>
-                                    <td>5%</td>
-                                    <td>₹ 22000</td>
-                                </tr>
+                                {data?.table.map((item, index) => {
+                                    return (
+                                        <tr key={item.key}>
+                                            <td>{index + 1}.</td>
+                                            <td>{item.Item}</td>
+                                            <td>{item.Quantity}</td>
+                                            <td>{item.Rate}</td>
+                                            <td>{item.Discount}</td>
+                                            <td>{item.Amount}</td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -106,7 +141,7 @@ function PrintOuotation(){
                         <div className="q-bank-words">
                             <p>
                                 <span>Total (in words) :</span>
-                                <span className="invoice-total-in-words">One Hundred Rupees Only</span>
+                                <span className="invoice-total-in-words">{data?.hideTotals.total_in_words}</span>
                             </p>
                         </div>
                     </div>
@@ -116,19 +151,33 @@ function PrintOuotation(){
                             <tbody>
                                 <tr>
                                     <th>Sub Total</th>
-                                    <td>₹ 59,000</td>
+                                    <td>{symbol} {data?.item_wise_discount.subtotal}</td>
                                 </tr>
                                 <tr>
                                     <th>Discount</th>
-                                    <td>(₹ 59,000)</td>
+                                    <td>{symbol} {data?.item_wise_discount.subtotal - data?.item_wise_discount.amount}</td>
                                 </tr>
                                 <tr>
-                                    <th>Extra Charges</th>
-                                    <td>₹ 59,000</td>
+                                    <th>Reductions</th>
+                                    <td>{symbol} {data?.hideTotals.discount_on_total.value}</td>
                                 </tr>
                                 <tr>
-                                    <th>Total (INR)</th>
-                                    <td>₹ 159,000</td>
+                                    <th>{data?.hideTotals.additional_charges.key}</th>
+                                    <td>{symbol} {data?.hideTotals.additional_charges.value}</td>
+                                </tr>
+                                    {data.q_bottom_add_more_field.map((item) => {
+                                        return (
+                                            <> 
+                                            <tr>
+                                                <th>{item.fieldName}</th>
+                                                <td>{item.value}</td>
+                                            </tr>
+                                            </>
+                                        )
+                                    })}
+                                <tr>
+                                    <th>Total ({data?.currency?.short_form})</th>
+                                    <td>{symbol} {data?.hideTotals.total}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -148,8 +197,9 @@ function PrintOuotation(){
                         Terms & Conditions
                     </div>
                     <ol className="invoice-terms">
-                        <li>Applicable taxes will be extra.</li>
-                        <li>Applicable taxes will be extra.</li>
+                        {data?.terms_and_conditions.map((term) => {
+                            return <li>{term.value}</li>
+                        })}
                     </ol>
                 </div>
 
@@ -158,17 +208,23 @@ function PrintOuotation(){
                         Additional Notes
                     </div>
                     <div className="ck-editor-contents">
-                        This is a note!
+                        {parse(data?.notes)}
                     </div>
                 </div>
 
                 <div className="q-invoice-terms-wrapper">
                     <div className="invoice-table">
                         <tbody>
-                            <tr>
-                                <th>Good</th>
-                                <td>Yess!</td>
-                            </tr>
+                                {data?.additional_info.map((item) => {
+                                    return (
+                                    <>
+                                        <tr>
+                                            <th>{item.fieldName}</th>
+                                            <td>{item.value}</td>    
+                                        </tr>
+                                    </>
+                                    )
+                                })}     
                         </tbody>
                     </div>
                 </div>
@@ -188,11 +244,11 @@ function PrintOuotation(){
                     <span>For any enquiry, reach out via </span>
                     <span>
                         email at
-                        <b> laveshbisht01@gmail.com </b>
+                        <b> {data?.contact_info.email} </b>
                     </span>
                     <span> , call on </span>
                     <span className="phone-input">
-                        <b> +91 829385792 </b>
+                        <b> {data?.contact_info.phone} </b>
                     </span>
                 </div>
 
